@@ -1,0 +1,3 @@
+parameters:
+  gos_web_host: '%env(GOS_WEB_HOST)%'
+  gos_web_port: '%env(GOS_WEB_PORT)%'
