@@ -1,7 +1,4 @@
 {
-    "cboden/ratchet": {
-        "version": "v0.4.1"
-    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -68,6 +65,7 @@
             "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
         }
     },
+<<<<<<< HEAD
     "evenement/evenement": {
         "version": "v3.0.1"
     },
@@ -86,6 +84,8 @@
     "guzzlehttp/psr7": {
         "version": "1.4.2"
     },
+=======
+>>>>>>> 91039d91ee155fbd47eb5c813be0485c08ce9187
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -104,15 +104,13 @@
     "psr/container": {
         "version": "1.0.0"
     },
-    "psr/http-message": {
-        "version": "1.0.1"
-    },
     "psr/log": {
         "version": "1.0.2"
     },
     "psr/simple-cache": {
         "version": "1.0.1"
     },
+<<<<<<< HEAD
     "ratchet/rfc6455": {
         "version": "v0.2.3"
     },
@@ -137,6 +135,8 @@
     "react/stream": {
         "version": "v0.7.7"
     },
+=======
+>>>>>>> 91039d91ee155fbd47eb5c813be0485c08ce9187
     "sensio/framework-extra-bundle": {
         "version": "4.0",
         "recipe": {

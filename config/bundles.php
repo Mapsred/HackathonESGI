@@ -11,8 +11,6 @@ return [
     Symfony\Bundle\DebugBundle\DebugBundle::class => ['dev' => true, 'test' => true],
     Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle::class => ['all' => true],
     Symfony\Bundle\MakerBundle\MakerBundle::class => ['dev' => true],
-    Gos\Bundle\WebSocketBundle\GosWebSocketBundle::class => ['all' => true],
-    Gos\Bundle\PubSubRouterBundle\GosPubSubRouterBundle::class => ['all' => true],
     Symfony\Bundle\WebServerBundle\WebServerBundle::class => ['dev' => true],
     Symfony\Bundle\SecurityBundle\SecurityBundle::class => ['all' => true],
 ];
