@@ -37,11 +37,10 @@ var Bot = {
             clone.appendTo('#messageContainer');
 
             $.ajax({
-                type: "POST",
                 url: Routing.generate('query'),
-                data: ('q', message ), 
-                dataType: 'json',
-                success: function(reponse){
+                type: "POST",
+                data: {'q': message},
+                success: function (reponse) {
                     console.log(reponse);
                 }
             });

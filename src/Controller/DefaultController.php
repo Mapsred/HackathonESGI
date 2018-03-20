@@ -4,6 +4,7 @@
 namespace App\Controller;
 
 use App\Utils\LuisSDK;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -20,15 +21,16 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/query", name="query")
+     * @Route("/query", name="query", options={"expose"=true})
+     * @Method({"POST"})
      * @param Request $request
      * @return Response
      */
     public function queryAction(Request $request)
     {
-        $response = $this->get(LuisSDK::class)->query($request->query->get('q'));
+        $response = $this->get(LuisSDK::class)->query($request->request->get('q'));
 
-        var_dump($response);
+        print_r($response);
 
         return new Response();
     }
