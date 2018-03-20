@@ -16,7 +16,7 @@ class DefaultController extends Controller
      */
     public function homepage()
     {
-        return $this->render('base.html.twig');
+        return $this->render('Default/bot.html.twig');
     }
 
     /**
