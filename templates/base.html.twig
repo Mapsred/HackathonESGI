@@ -7,6 +7,33 @@
     </head>
     <body>
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+
+
+        {% block javascripts %}
+
+        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+		<script>
+
+		$("#form").submit(function( event ) {
+
+  		event.preventDefault();
+
+		   $.ajax({
+		        type: "POST",
+		        url: "{{ path( 'query', { 'value': 1 } ) }}",
+		        dataType: 'json',
+		        success: function(reponse){
+
+		        }
+		    });
+
+		    });
+
+		</script>
+
+
+        {% endblock %}
+    
     </body>
 </html>

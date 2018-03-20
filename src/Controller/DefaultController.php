@@ -20,11 +20,11 @@ class DefaultController extends Controller
     }
 
     /**
-     * @Route("/query", name="query")
+     * @Route("/query/{value}", name="query")
      * @param Request $request
      * @return Response
      */
-    public function queryAction(Request $request)
+    public function queryAction(Request $request, $value)
     {
         $response = $this->get(LuisSDK::class)->query($request->query->get('q'));
 
