@@ -30,3 +30,7 @@ services:
 
     App\Utils\LuisSDK:
       public: true
+
+    App\Utils\IntentHandler:
+      public: true
+
