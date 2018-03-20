@@ -26,12 +26,27 @@ var Bot = {
 
     send: function () {
         Bot.sendButton.click(function () {
+
+            var message = Bot.inputText.val();
+
             var clone = Bot.modelDiv.clone();
             clone.find('.name').html("Name");
-            clone.find('.text-content').html(Bot.inputText.val());
+            clone.find('.text-content').html(message);
             Bot.inputText.val("");
 
             clone.appendTo('#messageContainer');
+
+            $.ajax({
+                type: "POST",
+                url: Routing.generate('query'),
+                data: ('q', message ), 
+                dataType: 'json',
+                success: function(reponse){
+                    console.log(reponse);
+                }
+            });
+
+
         });
     }
 };
