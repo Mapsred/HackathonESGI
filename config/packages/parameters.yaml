@@ -1,3 +1,5 @@
 parameters:
   gos_web_host: '%env(GOS_WEB_HOST)%'
   gos_web_port: '%env(GOS_WEB_PORT)%'
+  luis_url: '%env(LUIS_URL)%'
+  luis_key: '%env(LUIS_KEY)%'
