@@ -23,22 +23,26 @@ var Bot = {
         });
     },
 
+    appendMessage: function (message, name) {
+        var clone = Bot.modelDiv.clone();
+        clone.find('.name').html(name);
+        clone.find('.text-content').html(message);
+        clone.appendTo('#messageContainer');
+    },
+
     send: function () {
         Bot.sendButton.click(function () {
             var message = Bot.inputText.val();
-            var clone = Bot.modelDiv.clone();
-            clone.find('.name').html("Name");
-            clone.find('.text-content').html(message);
+            Bot.appendMessage(message, "Invité");
             Bot.inputText.val("");
-
-            clone.appendTo('#messageContainer');
 
             $.ajax({
                 url: Routing.generate('query'),
                 type: "POST",
                 data: {'q': message},
-                success: function (reponse) {
-                    console.log(reponse);
+                success: function (res) {
+                    var message = res['message'];
+                    Bot.appendMessage(message, "Djingo");
                 }
             });
         });
