@@ -43,3 +43,12 @@ services:
         MYSQL_USERNAME: root
         MYSQL_ROOT_PASSWORD: root
 
+    nodejs:
+      build: engine/nodejs
+      container_name: phpmyadmin-docker-nodejs
+      working_dir: /application
+      volumes:
+        - .:/application
+      ports:
+        - "3031:3000"
+      tty: true

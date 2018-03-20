@@ -1,0 +1,19 @@
+{
+  "name": "hackathon-esgi",
+  "description": "Hackathon ESGI",
+  "license": "MIT",
+  "ignore": [
+    "/.*",
+    "node_modules",
+    "bower_components",
+    "composer.json",
+    "documentation"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "jquery": "^3.2.1"
+  },
+  "resolutions": {
+    "jquery": "~3.2.1"
+  }
+}
