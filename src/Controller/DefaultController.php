@@ -3,6 +3,7 @@
 
 namespace App\Controller;
 
+use App\Utils\IntentHandler;
 use App\Utils\LuisSDK;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -31,24 +32,14 @@ class DefaultController extends Controller
      */
     public function queryAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-
         $response = $this->get(LuisSDK::class)->query($request->request->get('q'));
 
         $intent = $response['topScoringIntent']['intent'];
 
-        $parameters = array_combine(array_column($response['entities'], 'type'), array_column($response['entities'], 'entity')); 
-
-        $getIntent = $em->getRepository(Intent::class)->findOneByName($intent);
-
-        /*if(!empty($getIntent))
-        {
-            $result = 'Bienvenue '.$parameters['Identifier'].' !';
+        $result = 'Rien trouvé';
+        if (null !== $intent = $this->get(IntentHandler::class)->getIntent($intent)) {
+            $result = $this->get(IntentHandler::class)->handle($intent, $response);
         }
-        else
-        {
-            $result = 'rien trouvé ! >.<';
-        }*/
 
         return new JsonResponse(array('message' => $result));
     }
