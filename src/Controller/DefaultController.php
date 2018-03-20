@@ -16,15 +16,15 @@ class DefaultController extends Controller
      */
     public function homepage()
     {
-        return $this->render('base.html.twig');
+        return $this->render('Default/bot.html.twig');
     }
 
     /**
-     * @Route("/query/{value}", name="query")
+     * @Route("/query", name="query")
      * @param Request $request
      * @return Response
      */
-    public function queryAction(Request $request, $value)
+    public function queryAction(Request $request)
     {
         $response = $this->get(LuisSDK::class)->query($request->query->get('q'));
 

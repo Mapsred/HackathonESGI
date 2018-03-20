@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
+<<<<<<< HEAD
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <title>{% block title %}ChatBot!{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('build/app.css') }}">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -11,7 +13,7 @@
 
         {% block javascripts %}
 
-        <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="{{ asset('build/app.js') }}"></script>
 
 		<script>
 
@@ -36,4 +38,3 @@
         {% endblock %}
     
     </body>
-</html>
