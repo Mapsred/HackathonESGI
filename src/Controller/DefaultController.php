@@ -9,6 +9,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use App\Entity\Intent;
 
 class DefaultController extends Controller
 {
@@ -28,10 +31,25 @@ class DefaultController extends Controller
      */
     public function queryAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+
         $response = $this->get(LuisSDK::class)->query($request->request->get('q'));
 
-        print_r($response);
+        $intent = $response['topScoringIntent']['intent'];
 
-        return new Response();
+        $parameters = array_combine(array_column($response['entities'], 'type'), array_column($response['entities'], 'entity')); 
+
+        $getIntent = $em->getRepository(Intent::class)->findOneByName($intent);
+
+        /*if(!empty($getIntent))
+        {
+            $result = 'Bienvenue '.$parameters['Identifier'].' !';
+        }
+        else
+        {
+            $result = 'rien trouvé ! >.<';
+        }*/
+
+        return new JsonResponse(array('message' => $result));
     }
 }
