@@ -37,27 +37,3 @@
     </div>
 
 {% endblock %}
-
-
-{% block javascripts %}        
-
-        <script>
-
-        $("#form").submit(function( event ) {
-
-        event.preventDefault();
-
-           $.ajax({
-                type: "POST",
-                url: "{{ path( 'query', { 'value': 1 } ) }}",
-                dataType: 'json',
-                success: function(reponse){
-
-                }
-            });
-
-            });
-
-        </script>
-
-{% endblock %}
