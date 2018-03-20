@@ -2,7 +2,6 @@ $(document).ready(function () {
     Bot.init();
 });
 
-
 var Bot = {
     init: function () {
         Bot.initParameters();
@@ -26,9 +25,7 @@ var Bot = {
 
     send: function () {
         Bot.sendButton.click(function () {
-
             var message = Bot.inputText.val();
-
             var clone = Bot.modelDiv.clone();
             clone.find('.name').html("Name");
             clone.find('.text-content').html(message);
@@ -44,8 +41,6 @@ var Bot = {
                     console.log(reponse);
                 }
             });
-
-
         });
     }
 };
