@@ -1,4 +1,0 @@
-gos_web_socket:
-    server:
-        port: "%gos_web_port%"
-        host: "%gos_web_host%"
