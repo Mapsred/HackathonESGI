@@ -65,27 +65,6 @@
             "ref": "70062abc2cd58794d2a90274502f81b55cd9951b"
         }
     },
-<<<<<<< HEAD
-    "evenement/evenement": {
-        "version": "v3.0.1"
-    },
-    "gos/pnctl-event-loop-emitter": {
-        "version": "v0.1.6"
-    },
-    "gos/pubsub-router-bundle": {
-        "version": "v0.3.3"
-    },
-    "gos/web-socket-bundle": {
-        "version": "v1.8.12-rc6"
-    },
-    "gos/websocket-client": {
-        "version": "v0.1.2"
-    },
-    "guzzlehttp/psr7": {
-        "version": "1.4.2"
-    },
-=======
->>>>>>> 91039d91ee155fbd47eb5c813be0485c08ce9187
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
@@ -110,33 +89,6 @@
     "psr/simple-cache": {
         "version": "1.0.1"
     },
-<<<<<<< HEAD
-    "ratchet/rfc6455": {
-        "version": "v0.2.3"
-    },
-    "react/cache": {
-        "version": "v0.4.2"
-    },
-    "react/dns": {
-        "version": "v0.4.13"
-    },
-    "react/event-loop": {
-        "version": "v0.4.3"
-    },
-    "react/promise": {
-        "version": "v2.5.1"
-    },
-    "react/promise-timer": {
-        "version": "v1.2.1"
-    },
-    "react/socket": {
-        "version": "v0.8.10"
-    },
-    "react/stream": {
-        "version": "v0.7.7"
-    },
-=======
->>>>>>> 91039d91ee155fbd47eb5c813be0485c08ce9187
     "sensio/framework-extra-bundle": {
         "version": "4.0",
         "recipe": {
