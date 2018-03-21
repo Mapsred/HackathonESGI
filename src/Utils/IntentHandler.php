@@ -112,7 +112,7 @@ class IntentHandler
         if (method_exists($this, $intent->getName())) {
             $this->setParameters($response['entities']);
 
-            return call_user_func_array([$this, $intent->getName()], [$intent, $response]);
+            return call_user_func_array([$this, $intent->getName()], [$intent]);
         }
 
         return null;
@@ -134,19 +134,36 @@ class IntentHandler
 
         $identifier = $parameters[$intentParameters[0]];
         if (null !== $this->manager->getRepository(Profile::class)->findOneBy(['name' => $identifier])) {
-            $message = sprintf('Désolé, un profil avec l\'identifiant <b>%s</b> existe dèjà', $identifier);
-        }else {
-            $message = sprintf('Bien reçu, je vous crée un profil avec l\'identifiant <b>%s</b>', $identifier);
+            $message = sprintf(BotMessage::EXISTING_PROFILE, $identifier);
+        } else {
+            $message = sprintf(BotMessage::CREATING_PROFILE, $identifier);
             $profile = $this->profileManager->createAndFlushFromIdentifier($identifier);
             $this->setSessionIdentifier($profile->getName());
         }
-        
+
         return $message;
     }
 
-    protected function useAccount(Intent $intent, array $response)
+    /**
+     * @param Intent $intent
+     * @return null|string
+     */
+    protected function useAccount(Intent $intent)
     {
-        //TODO
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+        $identifier = $parameters[$intentParameters[0]];
+        if (null !== $profile = $this->manager->getRepository(Profile::class)->findOneBy(['name' => $identifier])) {
+            $message = sprintf(BotMessage::USING_PROFILE, $identifier);
+            $this->setSessionIdentifier($profile->getName());
+        } else {
+            $message = sprintf(BotMessage::NON_EXISTING_PROFILE, $identifier);
+        }
+
+        return $message;
     }
 
     /* Helper methods */

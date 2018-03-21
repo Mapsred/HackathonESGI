@@ -31,7 +31,7 @@ class LuisSDK
      */
     public function query($text)
     {
-        $url = $this->url . $text;
+        $url = $this->url . $this->stripAccents($text);
         $url = str_replace(' ', '%20', $url);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -44,5 +44,14 @@ class LuisSDK
         curl_close($ch);
 
         return json_decode($data, true);
+    }
+
+    /**
+     * @param $text
+     * @return string
+     */
+    private function stripAccents($text)
+    {
+        return strtr($text, 'àáâãäçèéêëìíîïñòóôõöùúûüýÿÀÁÂÃÄÇÈÉÊËÌÍÎÏÑÒÓÔÕÖÙÚÛÜÝ', 'aaaaaceeeeiiiinooooouuuuyyAAAAACEEEEIIIINOOOOOUUUUY');
     }
 }
