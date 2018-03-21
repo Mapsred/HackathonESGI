@@ -17,6 +17,7 @@ var Bot = {
         Bot.sendButton = $('#send');
         Bot.modelDiv = $(".model .message-model");
         Bot.user = "Invité";
+        Bot.add = 0;
     },
 
     keyPress: function () {
@@ -35,11 +36,57 @@ var Bot = {
     },
 
     replaceName: function (name) {
-      $('#messageContainer .message-model .name').each(function () {
-          if ($(this).text() !== "Djingo") {
-              $(this).html(name);
-          }
-      });
+        $('#messageContainer .message-model .name').each(function () {
+            if ($(this).text() !== "Djingo") {
+                $(this).html(name);
+            }
+        });
+    },
+
+    handleType: function (message) {
+
+        var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
+
+        if (typeof message['List'] !== "undefined") {
+
+            Bot.appendMessage(message['List'], "Djingo"); // LISTE
+
+        } else if (typeof message['Music'] !== "undefined") {
+
+            console.log(message['Music']);
+            var launch = window.open(message['Music'], '_blank'); // Jouer Musique
+            window.blur();
+            window.focus();
+
+            if (!launch) {
+                Bot.appendMessage(blocked, "Djingo");
+            }
+
+        } else if (typeof message['Add'] !== "undefined") {
+
+           Bot.add++;
+
+        }
+    },
+
+    addContent: function () {
+
+        Bot.appendMessage('Merci, je procède à l\'ajout', "Djingo");
+
+        Bot.add = 0;
+
+        $.ajax({
+            url: Routing.generate('add'),
+            type: "POST",
+            data: {'name': Bot.addName, 'url': Bot.addUrl},
+            success: function (res) {
+                console.log(res);
+                var message = res['message'];
+                Bot.appendMessage(message, "Djingo");
+            }
+
+        });
+
     },
 
     send: function () {
@@ -47,10 +94,6 @@ var Bot = {
             var message = Bot.inputText.val();
             Bot.appendMessage(message, Bot.user);
             Bot.inputText.val("");
-
-            if (typeof Bot.add === "undefined") {
-                Bot.add = 0;
-            }
 
             if (Bot.add == 1)
             {
@@ -62,23 +105,7 @@ var Bot = {
             else if (Bot.add == 2)
             {
                 Bot.addUrl = message;
-                Bot.appendMessage('Merci, je procède à l\'ajout', "Djingo");
-
-                Bot.add = 0;
-
-                $.ajax({
-                url: Routing.generate('add'),
-                type: "POST",
-                data: {'name': Bot.addName, 'url': Bot.addUrl},
-                success: function (res) {
-                    console.log(res);
-
-                    var message = res['message'];
-                    Bot.appendMessage(message, "Djingo");
-                }
-
-                });
-
+                Bot.addContent();
             }
             else
             {
@@ -94,52 +121,23 @@ var Bot = {
                     Bot.replaceName(res['name']);
 
                     var message = res['message'];
+
                     Bot.appendMessage(message, "Djingo");
 
-                    if(message.constructor === Array){
+                    if(message.constructor === Array){                    
 
-                    var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
-
-                    
-
-
-                        if(message['1']['type'] == 'List'){
-                        // LISTE
-                        
-                            Bot.appendMessage(message['1']['info'], "Djingo");
-
-                        }else 
-                        
-                        if(message['1']['type'] == 'Add'){
-                        // AJOUT
-                        
-                            Bot.add++;
-
-                        }else
-
-                        if(message['1']['type'] == 'Music'){
-                        // Jouer Musique
-
-                        console.log(message['1']['info']);
-
-                        var launch = window.open(message['1']['info'], '_blank');
-                        window.blur();
-                        window.focus();
-
-                        if (!launch) {
-                            Bot.appendMessage(blocked, "Djingo");
-                        }
-
-                        }
-
+                    Bot.appendMessage(typeof message === "string" ? message : message[0], "Djingo");
+                    if (typeof message === "object") {
+                        Bot.handleType(message);
+                    }   
 
                     }
-
                 }
             });
-
-        }
-
+            }
+        
         });
+
     }
-};
+
+}

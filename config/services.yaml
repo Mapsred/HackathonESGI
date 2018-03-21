@@ -28,8 +28,9 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Utils\LuisSDK:
-      public: true
+    App\Utils\:
+        resource: '../src/Utils'
+        public: true
 
     App\Utils\IntentHandler:
       public: true
@@ -39,3 +40,12 @@ services:
     App\Manager\:
         resource: '../src/Manager'
         public: true
+
+    #SonataIntl (deprecation for public: false and autowiring without class name as service name)
+    sonata.intl.templating.helper.datetime:
+      class: Sonata\IntlBundle\Templating\Helper\DateTimeHelper
+      public: true
+      arguments: ["@sonata.intl.timezone_detector", "%kernel.charset%", "@sonata.intl.locale_detector"]
+      tags: ["templating.helper"]
+
+    Sonata\IntlBundle\Templating\Helper\DateTimeHelper: '@sonata.intl.templating.helper.datetime'

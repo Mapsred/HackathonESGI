@@ -1,16 +1,17 @@
 <?php
 
-
 namespace App\Utils;
-
 
 use App\Entity\Intent;
 use App\Entity\Link;
 use App\Entity\Profile;
+use App\Entity\Task;
 use App\Entity\Type;
 use App\Manager\ProfileManager;
+use App\Manager\TaskManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Sonata\IntlBundle\Templating\Helper\DateTimeHelper;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -36,19 +37,30 @@ class IntentHandler
     /** @var Session session */
     private $session;
 
+    /** @var TaskManager taskManager */
+    private $taskManager;
+
+    /** @var DateTimeHelper dateTimeHelper */
+    private $dateTimeHelper;
+
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
      * @param LoggerInterface $logger
      * @param ProfileManager $profileManager
+     * @param TaskManager $taskManager
      * @param SessionInterface $session
+     * @param DateTimeHelper $dateTimeHelper
      */
-    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager, SessionInterface $session)
+    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager,
+                                TaskManager $taskManager, SessionInterface $session, DateTimeHelper $dateTimeHelper)
     {
         $this->manager = $manager;
         $this->logger = $logger;
         $this->profileManager = $profileManager;
         $this->session = $session;
+        $this->taskManager = $taskManager;
+        $this->dateTimeHelper = $dateTimeHelper;
     }
 
     /* Getter/Setter methods */
@@ -100,6 +112,14 @@ class IntentHandler
         }
 
         return $this;
+    }
+
+    /**
+     * @return Profile|null
+     */
+    public function getProfile(): ?Profile
+    {
+        return $this->profileManager->getRepository()->findOneBy(['name' => $this->getSessionIdentifier()]);
     }
 
     /* Handler (called from the Controller) */
@@ -158,7 +178,7 @@ class IntentHandler
             return $message;
         }
         $identifier = $parameters[$intentParameters[0]];
-        if (null !== $profile = $this->manager->getRepository(Profile::class)->findOneBy(['name' => $identifier])) {
+        if (null !== $profile = $this->profileManager->getRepository()->findOneBy(['name' => $identifier])) {
             $message = sprintf(BotMessage::USING_PROFILE, $identifier);
             $this->setSessionIdentifier($profile->getName());
         } else {
@@ -172,6 +192,56 @@ class IntentHandler
      * @param Intent $intent
      * @return null|string
      */
+    protected function addTask(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        $baseTime = $parameters[$intentParameters[0]];
+        $time = Helper::translateDate($baseTime);
+        if (null === $date = DateHelper::getDate($time)) {
+            return BotMessage::DATE_NOT_UNDERSTANDED;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::TASK_NOT_LOGGED_IN;
+        }
+
+        if (null !== $this->taskManager->getRepository()->findOneBy(['date' => $date, 'profile' => $profile])) {
+            return BotMessage::DATE_ALREADY_USED;
+        }
+
+        $this->taskManager->createAndFlushFromDateAndProfile($date, $profile);
+
+        return sprintf(BotMessage::DATE_SUCCESS, $baseTime);
+    }
+
+    /**
+     * @return array|string
+     */
+    protected function listTasks()
+    {
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::TASKS_NOT_LOGGED_IN;
+        }
+
+        $tasks = $this->taskManager->getRepository()->findBy(['profile' => $profile]);
+        if (empty($tasks)) {
+            return BotMessage::NO_TASKS;
+        }
+
+        return [BotMessage::TASKS, 'List' => implode(', ', array_map(function (Task $task) {
+            return Helper::formatDate($this->dateTimeHelper, $task->getDate(), "d MMMM Y à H:m");
+        }, $tasks))];
+    }
+
+    /**
+     * @param Intent $intent
+     * @return array|null|string
+     */
     protected function launchMusic(Intent $intent)
     {
         $parameters = $this->getParameters();
@@ -181,50 +251,30 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-
-        $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier]);
-
-        if (null !== $music) {
-            $message = sprintf('Je lance la musique : '.$identifier, $identifier);
-            $action['type'] = 'Music';
-            $action['info'] = $music->getUrl();
-
-        }else {
-            $message = sprintf('Impossible de trouver cette musique, être vous sûr du nom ?', $identifier);
+        if (null !== $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier])) {
+            return [sprintf(BotMessage::LAUNCH_MUSIC, $identifier), 'Music' => $music->getUrl()];
         }
-        
-        return array($message, $action);
+
+        return sprintf(BotMessage::MUSIC_NOT_FOUND, $identifier);
     }
 
     /**
-     * @param Intent $intent
-     * @return null|string
+     * @return array|null|string
      */
-    protected function listMusic(Intent $intent)
+    protected function listMusic()
     {
-
-        $typeMusic = $this->manager->getRepository(Type::class)->findByName('Music');
-
-        $listMusic = $this->manager->getRepository(Link::class)->findByType(['type' => $typeMusic]);
-
+        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music']);
+        $listMusic = $this->manager->getRepository(Link::class)->findBy(['type' => $typeMusic]);
         $listNameMusic = [];
-
         foreach ($listMusic as $music) {
-            
             $listNameMusic[] = $music->getName();
-
         }
 
         if (!empty($listMusic)) {
-            $message = sprintf('Voici la liste de vos musiques : ');
-            $action['type'] = 'List';
-            $action['info'] = implode(', ', $listNameMusic);
-
-        }else {
-            $message = sprintf('Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez');
+            return [BotMessage::MUSIC_LIST, 'List' => implode(', ', $listNameMusic)];
         }
-        
-        return array($message, $action);
+
+        return BotMessage::NO_MUSIC;
     }
 
     /**
