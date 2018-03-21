@@ -61,6 +61,8 @@ class DefaultController extends Controller
         $name = $request->get('name');
         $url = $request->get('url');
 
+        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music']);
+
         $result = 'je n\'arrive pas à l\'ajouter...';
 
         if (!empty($name) && !empty($url))
@@ -68,7 +70,7 @@ class DefaultController extends Controller
             $newLink = new Link;
             $newLink->setName($name);
             $newLink->setUrl($url);
-            $newLink->setType(1);
+            $newLink->setType($typeMusic);
             $this->getDoctrine()->getManager()->persist($newLink);
             $this->getDoctrine()->getManager()->flush();
 
