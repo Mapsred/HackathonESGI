@@ -3,11 +3,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Type;
 use App\Utils\IntentHandler;
 use App\Utils\LuisSDK;
-
 use App\Entity\Link;
-
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -65,8 +64,7 @@ class DefaultController extends Controller
 
         $result = 'je n\'arrive pas à l\'ajouter...';
 
-        if (!empty($name) && !empty($url))
-        {
+        if (!empty($name) && !empty($url)) {
             $newLink = new Link;
             $newLink->setName($name);
             $newLink->setUrl($url);

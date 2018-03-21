@@ -5,26 +5,25 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="type")
  * @ORM\Entity(repositoryClass="App\Repository\TypeRepository")
  */
 class Type
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @var string $name
+     * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
-
-    /**
-     * @ORM\OneToMany(targetEntity="Link", mappedBy="type")
-     */
-    private $links;
 
     public function getId()
     {

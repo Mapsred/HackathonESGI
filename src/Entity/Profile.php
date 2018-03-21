@@ -28,22 +28,19 @@ class Profile
     private $name;
 
     /**
-     * @var ArrayCollection Link $links
-     * Owning Side
-     *
-     * @ORM\ManyToMany(targetEntity="Link", inversedBy="profiles", cascade={"persist", "merge"})
-     * @ORM\JoinTable(name="ProfileLink",
-     *   joinColumns={@ORM\JoinColumn(name="Profile_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="Link_id", referencedColumnName="id")}
-     * )
-     */
-    private $links;
-
-    /**
      * @var ArrayCollection|Task[]
      * @ORM\OneToMany(targetEntity="App\Entity\Task", mappedBy="profile")
      */
     private $tasks;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Link", inversedBy="profiles")
+     * @ORM\JoinTable(name="profile_link",
+     *   joinColumns={@ORM\JoinColumn(name="profile", referencedColumnName="id")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="link", referencedColumnName="id")}
+     * )
+     */
+    private $links;
 
     /**
      * Profile constructor.
@@ -51,6 +48,7 @@ class Profile
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
+        $this->links = new ArrayCollection();
     }
 
     /**
@@ -114,6 +112,32 @@ class Profile
             if ($task->getProfile() === $this) {
                 $task->setProfile(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Link[]
+     */
+    public function getLinks(): Collection
+    {
+        return $this->links;
+    }
+
+    public function addLink(Link $link): self
+    {
+        if (!$this->links->contains($link)) {
+            $this->links[] = $link;
+        }
+
+        return $this;
+    }
+
+    public function removeLink(Link $link): self
+    {
+        if ($this->links->contains($link)) {
+            $this->links->removeElement($link);
         }
 
         return $this;
