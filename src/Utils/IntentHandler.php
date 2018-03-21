@@ -9,6 +9,8 @@ use App\Entity\Profile;
 use App\Manager\ProfileManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 /**
  * Class IntentHandler
@@ -29,18 +31,25 @@ class IntentHandler
     /** @var ProfileManager profileManager */
     private $profileManager;
 
+    /** @var Session session */
+    private $session;
+
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
      * @param LoggerInterface $logger
      * @param ProfileManager $profileManager
+     * @param SessionInterface $session
      */
-    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager)
+    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager, SessionInterface $session)
     {
         $this->manager = $manager;
         $this->logger = $logger;
         $this->profileManager = $profileManager;
+        $this->session = $session;
     }
+
+    /* Getter/Setter methods */
 
     /**
      * @param string $name
@@ -52,7 +61,6 @@ class IntentHandler
     }
 
     /**
-     * @param array $response
      * @return array
      */
     public function getParameters()
@@ -70,6 +78,29 @@ class IntentHandler
 
         return $this;
     }
+
+    /**
+     * @return string
+     */
+    public function getSessionIdentifier(): ?string
+    {
+        return $this->session->get('current_identifier');
+    }
+
+    /**
+     * @param string $identifier
+     * @return IntentHandler
+     */
+    public function setSessionIdentifier(string $identifier)
+    {
+        if (null !== $identifier) {
+            $this->session->set('current_identifier', $identifier);
+        }
+
+        return $this;
+    }
+
+    /* Handler (called from the Controller) */
 
     /**
      * @param Intent $intent
@@ -106,7 +137,8 @@ class IntentHandler
             $message = sprintf('Désolé, un profil avec l\'identifiant <b>%s</b> existe dèjà', $identifier);
         }else {
             $message = sprintf('Bien reçu, je vous crée un profil avec l\'identifiant <b>%s</b>', $identifier);
-            $this->profileManager->createAndFlushFromIdentifier($identifier);
+            $profile = $this->profileManager->createAndFlushFromIdentifier($identifier);
+            $this->setSessionIdentifier($profile->getName());
         }
         
         return $message;
@@ -116,6 +148,8 @@ class IntentHandler
     {
         //TODO
     }
+
+    /* Helper methods */
 
     /**
      * @param array $intentParameters

@@ -39,6 +39,10 @@ class DefaultController extends Controller
             $result = $this->get(IntentHandler::class)->handle($intent, $response);
         }
 
-        return new JsonResponse(['message' => $result, 'response' => $response]);
+        return new JsonResponse([
+            'message' => $result,
+            'response' => $response,
+            'name' => $this->get(IntentHandler::class)->getSessionIdentifier() ?: "Invité"
+        ]);
     }
 }
