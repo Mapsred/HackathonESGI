@@ -33,4 +33,9 @@ services:
 
     App\Utils\IntentHandler:
       public: true
+      arguments:
+        $logger: "@monolog.logger.bot"
 
+    App\Manager\:
+        resource: '../src/Manager'
+        public: true
