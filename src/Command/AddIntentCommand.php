@@ -39,6 +39,6 @@ class AddIntentCommand extends ContainerAwareCommand
         $manager->flush();
 
 
-        $io->success(sprintf('You have a successfully added %s', $intent));
+        $io->success(sprintf('You have a successfully added %s', $intent->getName()));
     }
 }

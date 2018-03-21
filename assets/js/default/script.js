@@ -32,11 +32,27 @@ var Bot = {
     },
 
     replaceName: function (name) {
-      $('#messageContainer .message-model .name').each(function () {
-          if ($(this).text() !== "Djingo") {
-              $(this).html(name);
-          }
-      });
+        $('#messageContainer .message-model .name').each(function () {
+            if ($(this).text() !== "Djingo") {
+                $(this).html(name);
+            }
+        });
+    },
+
+    handleType: function (message) {
+        var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
+        if (typeof message['List'] !== "undefined") {
+            Bot.appendMessage(message['List'], "Djingo"); // LISTE
+        } else if (typeof message['Music'] !== "undefined") {
+            console.log(message['Music']);
+            var launch = window.open(message['Music'], '_blank'); // Jouer Musique
+            window.blur();
+            window.focus();
+
+            if (!launch) {
+                Bot.appendMessage(blocked, "Djingo");
+            }
+        }
     },
 
     send: function () {
@@ -56,36 +72,10 @@ var Bot = {
                     Bot.replaceName(res['name']);
 
                     var message = res['message'];
-                    Bot.appendMessage(message, "Djingo");
-
-                    if(message.constructor === Array){
-
-                    var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
-
-
-                        if(message['1']['type'] == 'List'){
-                        // LISTE
-                        
-                            Bot.appendMessage(message['1']['info'], "Djingo");
-
-                        }else if(message['1']['type'] == 'Music'){
-                        // Jouer Musique
-
-                        console.log(message['1']['info']);
-
-                        var launch = window.open(message['1']['info'], '_blank');
-                        window.blur();
-                        window.focus();
-
-                        if (!launch) {
-                            Bot.appendMessage(blocked, "Djingo");
-                        }
-
-                        }
-
-
+                    Bot.appendMessage(typeof message === "string" ? message : message[0], "Djingo");
+                    if (typeof message === "object") {
+                        Bot.handleType(message);
                     }
-
                 }
             });
         });

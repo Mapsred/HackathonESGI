@@ -20,4 +20,9 @@ interface BotMessage
     const DATE_ALREADY_USED = 'Désolé, vous avez déjà un rendez-vous à cette date';
     const DATE_SUCCESS = 'Votre rendez-vous du %s a bien été ajouté';
     const TASK_NOT_LOGGED_IN = "Désolé, vous devez être connecté pour ajouter une tâche";
+
+    const LAUNCH_MUSIC = 'Je lance la musique : %s';
+    const MUSIC_LIST = 'Voici la liste de vos musiques : ';
+    const NO_MUSIC = 'Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez';
+    const MUSIC_NOT_FOUND = 'Impossible de trouver la musique %s, être vous sûr du nom ?';
 }

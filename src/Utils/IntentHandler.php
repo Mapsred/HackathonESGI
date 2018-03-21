@@ -110,7 +110,7 @@ class IntentHandler
     /**
      * @return Profile|null
      */
-    public function getProfile() : ?Profile
+    public function getProfile(): ?Profile
     {
         return $this->profileManager->getRepository()->findOneBy(['name' => $this->getSessionIdentifier()]);
     }
@@ -214,7 +214,7 @@ class IntentHandler
 
     /**
      * @param Intent $intent
-     * @return null|string
+     * @return array|null|string
      */
     protected function launchMusic(Intent $intent)
     {
@@ -225,50 +225,30 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-
-        $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier]);
-
-        if (null !== $music) {
-            $message = sprintf('Je lance la musique : '.$identifier, $identifier);
-            $action['type'] = 'Music';
-            $action['info'] = $music->getUrl();
-
-        }else {
-            $message = sprintf('Impossible de trouver cette musique, être vous sûr du nom ?', $identifier);
+        if (null !== $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier])) {
+            return [sprintf(BotMessage::LAUNCH_MUSIC, $identifier), 'Music' => $music->getUrl()];
         }
 
-        return array($message, $action);
+        return sprintf(BotMessage::MUSIC_NOT_FOUND, $identifier);
     }
 
-        /**
-     * @param Intent $intent
-     * @return null|string
+    /**
+     * @return array|null|string
      */
-    protected function listMusic(Intent $intent)
+    protected function listMusic()
     {
-
-        $typeMusic = $this->manager->getRepository(Type::class)->findByName('Music');
-
-        $listMusic = $this->manager->getRepository(Link::class)->findByType(['type' => $typeMusic]);
-
+        $typeMusic = $this->manager->getRepository(Type::class)->findBy(['name' => 'Music']);
+        $listMusic = $this->manager->getRepository(Link::class)->findBy(['type' => $typeMusic]);
         $listNameMusic = [];
-
         foreach ($listMusic as $music) {
-
             $listNameMusic[] = $music->getName();
-
         }
 
         if (!empty($listMusic)) {
-            $message = sprintf('Voici la liste de vos musiques : ');
-            $action['type'] = 'List';
-            $action['info'] = implode(', ', $listNameMusic);
-
-        }else {
-            $message = sprintf('Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez');
+            return [BotMessage::MUSIC_LIST, 'List' => implode(', ', $listNameMusic)];
         }
 
-        return array($message, $action);
+        return BotMessage::NO_MUSIC;
     }
 
     /* Helper methods */
