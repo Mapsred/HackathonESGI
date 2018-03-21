@@ -51,7 +51,10 @@ var Bot = {
                 data: {'q': message},
                 success: function (res) {
                     console.log(res);
+
+                    Bot.user = res['name'];
                     Bot.replaceName(res['name']);
+
                     var message = res['message'];
                     Bot.appendMessage(message, "Djingo");
 

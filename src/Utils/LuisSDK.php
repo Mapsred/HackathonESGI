@@ -31,8 +31,7 @@ class LuisSDK
      */
     public function query($text)
     {
-        $url = $this->url . $text;
-        $url = str_replace(' ', '%20', $url);
+        $url = $this->url . urlencode($text);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
