@@ -32,6 +32,8 @@ interface BotMessage
     const MUSIC_NOT_FOUND = 'Impossible de trouver la musique %s, être vous sûr du nom ?';
     const LINK_ADD = 'Tu souhaites ajouter un(e) %s ? Quel est son nom ?';
     const LINK_UNAVAILABLE = 'Impossible d\'ajouter ce genre de chose, être vous sûr du nom ?';
+    const PREFERED_UNAVAILABLE = 'Je ne trouve aucune préférence.';
+    const PREFERED_SHOW = 'Votre %s préféré(e) est :';
 
     const ROUTINE_NOT_LOGGED_IN = "Désolé, vous devez être connecté pour ajouter une routine";
     const ROUTING_ALREADY_EXISTING = 'La routine %s existe déjà';

@@ -338,6 +338,28 @@ class IntentHandler
      * @param Intent $intent
      * @return array|null|string
      */
+    protected function preferedLink(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+        if (null !== $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music'])) {
+            
+
+            /*return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'Prefered' => $identifier];*/
+        }
+
+        return BotMessage::PREFERED_UNAVAILABLE;
+    }
+
+    /**
+     * @param Intent $intent
+     * @return array|null|string
+     */
     protected function addRoutine(Intent $intent)
     {
         $parameters = $this->getParameters();
