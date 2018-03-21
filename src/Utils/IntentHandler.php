@@ -7,6 +7,7 @@ namespace App\Utils;
 use App\Entity\Intent;
 use App\Entity\Link;
 use App\Entity\Profile;
+use App\Entity\Type;
 use App\Manager\ProfileManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
@@ -191,9 +192,37 @@ class IntentHandler
         }else {
             $message = sprintf('Impossible de trouver cette musique, être vous sûr du nom ?', $identifier);
         }
+        
+        return array($message, $action);
+    }
 
+        /**
+     * @param Intent $intent
+     * @return null|string
+     */
+    protected function listMusic(Intent $intent)
+    {
 
+        $typeMusic = $this->manager->getRepository(Type::class)->findByName('Music');
 
+        $listMusic = $this->manager->getRepository(Link::class)->findByType(['type' => $typeMusic]);
+
+        $listNameMusic = [];
+
+        foreach ($listMusic as $music) {
+            
+            $listNameMusic[] = $music->getName();
+
+        }
+
+        if (!empty($listMusic)) {
+            $message = sprintf('Voici la liste de vos musiques : ');
+            $action['type'] = 'List';
+            $action['info'] = implode(', ', $listNameMusic);
+
+        }else {
+            $message = sprintf('Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez');
+        }
         
         return array($message, $action);
     }

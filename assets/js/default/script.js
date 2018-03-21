@@ -61,10 +61,17 @@ var Bot = {
                     if(message.constructor === Array){
 
                     var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
-                            
-                        if(message['1']['type'] == 'Music'){
 
-                            console.log(message['1']['info']);
+
+                        if(message['1']['type'] == 'List'){
+                        // LISTE
+                        
+                            Bot.appendMessage(message['1']['info'], "Djingo");
+
+                        }else if(message['1']['type'] == 'Music'){
+                        // Jouer Musique
+
+                        console.log(message['1']['info']);
 
                         var launch = window.open(message['1']['info'], '_blank');
                         window.blur();
