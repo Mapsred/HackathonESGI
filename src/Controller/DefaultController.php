@@ -61,7 +61,7 @@ class DefaultController extends Controller
         $name = $request->get('name');
         $url = $request->get('url');
 
-        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music']);
+        $typeMusic = $this->getDoctrine()->getManager()->getRepository(Type::class)->findOneBy(['name' => 'Music']);
 
         $result = 'je n\'arrive pas à l\'ajouter...';
 
