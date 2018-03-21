@@ -1,11 +1,8 @@
 $(document).ready(function () {
-
     Bot.init();
-
 });
 
 var Bot = {
-
     init: function () {
         Bot.initParameters();
         Bot.keyPress();
@@ -44,35 +41,24 @@ var Bot = {
     },
 
     handleType: function (message) {
-
         var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
-
         if (typeof message['List'] !== "undefined") {
-
             Bot.appendMessage(message['List'], "Djingo"); // LISTE
-
         } else if (typeof message['Music'] !== "undefined") {
-
             console.log(message['Music']);
             var launch = window.open(message['Music'], '_blank'); // Jouer Musique
             window.blur();
             window.focus();
-
             if (!launch) {
                 Bot.appendMessage(blocked, "Djingo");
             }
-
         } else if (typeof message['Add'] !== "undefined") {
-
-           Bot.add++;
-
+            Bot.add++;
         }
     },
 
     addContent: function () {
-
         Bot.appendMessage('Merci, je procède à l\'ajout', "Djingo");
-
         Bot.add = 0;
 
         $.ajax({
@@ -84,9 +70,26 @@ var Bot = {
                 var message = res['message'];
                 Bot.appendMessage(message, "Djingo");
             }
-
         });
+    },
 
+    query: function (message) {
+        $.ajax({
+            url: Routing.generate('query'),
+            type: "POST",
+            data: {'q': message},
+            success: function (res) {
+                console.log(res);
+                Bot.user = res['name'];
+                Bot.replaceName(res['name']);
+
+                var message = res['message'];
+                Bot.appendMessage(typeof message === "string" ? message : message[0], "Djingo");
+                if (typeof message === "object") {
+                    Bot.handleType(message);
+                }
+            }
+        });
     },
 
     send: function () {
@@ -95,49 +98,16 @@ var Bot = {
             Bot.appendMessage(message, Bot.user);
             Bot.inputText.val("");
 
-            if (Bot.add == 1)
-            {
+            if (Bot.add === 1) {
                 Bot.addName = message;
                 Bot.add++;
                 Bot.appendMessage('Très bien, et quel est le lien ?', "Djingo");
-
-            }
-            else if (Bot.add == 2)
-            {
+            } else if (Bot.add === 2) {
                 Bot.addUrl = message;
                 Bot.addContent();
+            } else {
+                Bot.query(message);
             }
-            else
-            {
-
-            $.ajax({
-                url: Routing.generate('query'),
-                type: "POST",
-                data: {'q': message},
-                success: function (res) {
-                    console.log(res);
-
-                    Bot.user = res['name'];
-                    Bot.replaceName(res['name']);
-
-                    var message = res['message'];
-
-                    Bot.appendMessage(message, "Djingo");
-
-                    if(message.constructor === Array){                    
-
-                    Bot.appendMessage(typeof message === "string" ? message : message[0], "Djingo");
-                    if (typeof message === "object") {
-                        Bot.handleType(message);
-                    }   
-
-                    }
-                }
-            });
-            }
-        
         });
-
     }
-
-}
+};

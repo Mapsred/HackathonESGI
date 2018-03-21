@@ -279,11 +279,10 @@ class IntentHandler
 
     /**
      * @param Intent $intent
-     * @return null|string
+     * @return array|null|string
      */
     protected function addLink(Intent $intent)
     {
-
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
         if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
@@ -291,19 +290,11 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-
-        $type = $this->manager->getRepository(Type::class)->findByName(['name' => $identifier]);
-
-        if (null !== $type) {
-            $message = sprintf('Tu souhaites ajouter un(e) '.$identifier.' ? Quel son nom ?', $identifier);
-            $action['type'] = 'Add';
-            $action['info'] = $identifier;
-
-        }else {
-            $message = sprintf('Impossible d\'ajouter ce genre de chose, être vous sûr du nom ?', $identifier);
+        if (null === $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
+            return [sprintf(BotMessage::MUSIC_ADD, $identifier), 'Add' => $identifier];
         }
-        
-        return array($message, $action);
+
+        return BotMessage::MUSIC_UNAVAILABLE;
     }
 
     /* Helper methods */
