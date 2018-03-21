@@ -16,6 +16,15 @@ var Bot = {
         Bot.messageContainer = $('#messageContainer');
         Bot.user = "Invité";
         Bot.add = 0;
+        Bot.initRoutineParameters();
+    },
+
+    initRoutineParameters: function () {
+        Bot.routine = {
+            isOnRoutine: 0,
+            routineContent: [],
+            routineName: ""
+        };
     },
 
     keyPress: function () {
@@ -58,6 +67,9 @@ var Bot = {
             }
         } else if (typeof message['Add'] !== "undefined") {
             Bot.add++;
+        } else if (typeof message['AddRoutine'] !== "undefined") {
+            Bot.routine.isOnRoutine = 1;
+            Bot.routine.routineName = message['AddRoutine'];
         }
     },
 
@@ -96,21 +108,44 @@ var Bot = {
         });
     },
 
+    manageRoutine: function (message) {
+        if (message.length > 0) {
+            Bot.routine.routineContent.push(message);
+            Bot.appendMessage('Quelle autre action voulez-vous ajouter ?  (appuyez sur entrée pour arreter l\'ajout)', "Djingo");
+        } else {
+            $.ajax({
+                url: Routing.generate('routine_add'),
+                type: "POST",
+                data: {'name': Bot.routine.routineName, 'content': Bot.routine.routineContent},
+                success: function (res) {
+                    Bot.initRoutineParameters();
+                    var message = res['message'];
+                    Bot.appendMessage(message, "Djingo");
+                }
+            });
+        }
+
+    },
+
     send: function () {
         Bot.sendButton.click(function () {
             var message = Bot.inputText.val();
             Bot.appendMessage(message, Bot.user);
             Bot.inputText.val("");
 
-            if (Bot.add === 1) {
-                Bot.addName = message;
-                Bot.add++;
-                Bot.appendMessage('Très bien, et quel est le lien ?', "Djingo");
-            } else if (Bot.add === 2) {
-                Bot.addUrl = message;
-                Bot.addContent();
+            if (Bot.routine.isOnRoutine !== 0) {
+                Bot.manageRoutine(message);
             } else {
-                Bot.query(message);
+                if (Bot.add === 1) {
+                    Bot.addName = message;
+                    Bot.add++;
+                    Bot.appendMessage('Très bien, et quel est le lien ?', "Djingo");
+                } else if (Bot.add === 2) {
+                    Bot.addUrl = message;
+                    Bot.addContent();
+                } else {
+                    Bot.query(message);
+                }
             }
         });
     }

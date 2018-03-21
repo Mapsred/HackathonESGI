@@ -4,6 +4,8 @@
 namespace App\Controller;
 
 use App\Entity\Type;
+use App\Manager\RoutineManager;
+use App\Utils\BotMessage;
 use App\Utils\IntentHandler;
 use App\Utils\LuisSDK;
 use App\Entity\Link;
@@ -77,6 +79,40 @@ class DefaultController extends Controller
 
         return new JsonResponse([
             'message' => $result,
+            'name' => $this->get(IntentHandler::class)->getSessionIdentifier() ?: "Invité"
+        ]);
+    }
+
+    /**
+     * @Route("/routing_add", name="routine_add", options={"expose"=true})
+     * @Method({"POST"})
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function routingAdd(Request $request)
+    {
+        if (!$request->request->has('name') || !$request->request->has('content')) {
+            return new JsonResponse([
+                'message' => 'Je n\'ai pas réussi à ajouter votre routine, une erreur s\'est produite',
+                'name' => $this->get(IntentHandler::class)->getSessionIdentifier() ?: "Invité"
+            ]);
+        }
+
+        if (null === $profile = $this->get(IntentHandler::class)->getProfile()) {
+            return new JsonResponse([
+                'message' => BotMessage::ROUTINE_NOT_LOGGED_IN,
+                'name' => $this->get(IntentHandler::class)->getSessionIdentifier() ?: "Invité"
+            ]);
+        }
+
+        $this->get(RoutineManager::class)->createAndFlushFromProfileAndContent(
+            $profile,
+            $request->request->get('content'),
+            $request->request->get('name')
+        );
+
+        return new JsonResponse([
+            'message' => 'Votre routine a bien été ajoutée',
             'name' => $this->get(IntentHandler::class)->getSessionIdentifier() ?: "Invité"
         ]);
     }

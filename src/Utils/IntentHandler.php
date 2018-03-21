@@ -8,10 +8,10 @@ use App\Entity\Profile;
 use App\Entity\Task;
 use App\Entity\Type;
 use App\Manager\ProfileManager;
+use App\Manager\RoutineManager;
 use App\Manager\TaskManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
-use Sonata\IntlBundle\Templating\Helper\DateTimeHelper;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -40,22 +40,27 @@ class IntentHandler
     /** @var TaskManager taskManager */
     private $taskManager;
 
+    /** @var RoutineManager routineManager */
+    private $routineManager;
+
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
      * @param LoggerInterface $logger
      * @param ProfileManager $profileManager
      * @param TaskManager $taskManager
+     * @param RoutineManager $routineManager
      * @param SessionInterface $session
      */
     public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager,
-                                TaskManager $taskManager, SessionInterface $session)
+                                TaskManager $taskManager, RoutineManager $routineManager, SessionInterface $session)
     {
         $this->manager = $manager;
         $this->logger = $logger;
         $this->profileManager = $profileManager;
         $this->session = $session;
         $this->taskManager = $taskManager;
+        $this->routineManager = $routineManager;
     }
 
     /* Getter/Setter methods */
@@ -323,6 +328,30 @@ class IntentHandler
         }
 
         return BotMessage::MUSIC_UNAVAILABLE;
+    }
+
+    /**
+     * @param Intent $intent
+     * @return array|null|string
+     */
+    protected function addRoutine(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::ROUTINE_NOT_LOGGED_IN;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+        if (null === $this->routineManager->getRepository()->findOneBy(['name' => $identifier])) {
+            return [sprintf(BotMessage::ROUTING_ADDING, $identifier), 'AddRoutine' => $identifier];
+        }
+
+        return BotMessage::ROUTING_ALREADY_EXISTING;
     }
 
     /* Helper methods */

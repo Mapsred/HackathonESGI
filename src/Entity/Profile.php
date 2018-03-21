@@ -43,12 +43,18 @@ class Profile
     private $links;
 
     /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Routine", mappedBy="profile")
+     */
+    private $routines;
+
+    /**
      * Profile constructor.
      */
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
         $this->links = new ArrayCollection();
+        $this->routines = new ArrayCollection();
     }
 
     /**
@@ -138,6 +144,37 @@ class Profile
     {
         if ($this->links->contains($link)) {
             $this->links->removeElement($link);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Routine[]
+     */
+    public function getRoutines(): Collection
+    {
+        return $this->routines;
+    }
+
+    public function addRoutine(Routine $routine): self
+    {
+        if (!$this->routines->contains($routine)) {
+            $this->routines[] = $routine;
+            $routine->setProfile($this);
+        }
+
+        return $this;
+    }
+
+    public function removeRoutine(Routine $routine): self
+    {
+        if ($this->routines->contains($routine)) {
+            $this->routines->removeElement($routine);
+            // set the owning side to null (unless already changed)
+            if ($routine->getProfile() === $this) {
+                $routine->setProfile(null);
+            }
         }
 
         return $this;
