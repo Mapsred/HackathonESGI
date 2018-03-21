@@ -5,6 +5,7 @@ namespace App\Utils;
 
 
 use App\Entity\Intent;
+use App\Entity\Link;
 use App\Entity\Profile;
 use App\Manager\ProfileManager;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -147,6 +148,37 @@ class IntentHandler
     protected function useAccount(Intent $intent, array $response)
     {
         //TODO
+    }
+
+    /**
+     * @param Intent $intent
+     * @return null|string
+     */
+    protected function launchMusic(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+
+        $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier]);
+
+        if (null !== $music) {
+            $message = sprintf('Je lance la musique : '.$identifier, $identifier);
+            $action['type'] = 'Music';
+            $action['info'] = $music->getUrl();
+
+        }else {
+            $message = sprintf('Impossible de trouver cette musique, être vous sûr du nom ?', $identifier);
+        }
+
+
+
+        
+        return array($message, $action);
     }
 
     /* Helper methods */

@@ -54,6 +54,28 @@ var Bot = {
                     Bot.replaceName(res['name']);
                     var message = res['message'];
                     Bot.appendMessage(message, "Djingo");
+
+                    if(message.constructor === Array){
+
+                    var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
+                            
+                        if(message['1']['type'] == 'Music'){
+
+                            console.log(message['1']['info']);
+
+                        var launch = window.open(message['1']['info'], '_blank');
+                        window.blur();
+                        window.focus();
+
+                        if (!launch) {
+                            Bot.appendMessage(blocked, "Djingo");
+                        }
+
+                        }
+
+
+                    }
+
                 }
             });
         });
