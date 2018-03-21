@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use DoctrineCommonCollectionsArrayCollection;
 
 /**
  * @ORM\Table(name="profile")
@@ -24,6 +25,18 @@ class Profile
      * @ORM\Column(name="name", type="string", length=255)
      */
     private $name;
+
+    /**
+     * @var ArrayCollection Link $links
+     * Owning Side
+     *
+     * @ORM\ManyToMany(targetEntity="Link", inversedBy="profiles", cascade={"persist", "merge"})
+     * @ORM\JoinTable(name="ProfileLink",
+     *   joinColumns={@ORM\JoinColumn(name="Profile_id", referencedColumnName="id")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="Link_id", referencedColumnName="id")}
+     * )
+     */
+    private $links;
 
     public function getId()
     {
