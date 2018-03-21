@@ -39,6 +39,6 @@ class DefaultController extends Controller
             $result = $this->get(IntentHandler::class)->handle($intent, $response);
         }
 
-        return new JsonResponse(array('message' => $result));
+        return new JsonResponse(['message' => $result, 'response' => $response]);
     }
 }
