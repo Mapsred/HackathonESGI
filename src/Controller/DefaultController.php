@@ -68,7 +68,7 @@ class DefaultController extends Controller
             $newLink = new Link;
             $newLink->setName($name);
             $newLink->setUrl($url);
-            $newLink->setType('Music');
+            $newLink->setType(1);
             $this->getDoctrine()->getManager()->persist($newLink);
             $this->getDoctrine()->getManager()->flush();
 
