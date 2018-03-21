@@ -1,14 +1,13 @@
 <?php
 
-
 namespace App\Utils;
-
 
 use App\Entity\Intent;
 use App\Entity\Link;
 use App\Entity\Profile;
 use App\Entity\Type;
 use App\Manager\ProfileManager;
+use App\Manager\TaskManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -36,19 +35,25 @@ class IntentHandler
     /** @var Session session */
     private $session;
 
+    /** @var TaskManager taskManager */
+    private $taskManager;
+
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
      * @param LoggerInterface $logger
      * @param ProfileManager $profileManager
+     * @param TaskManager $taskManager
      * @param SessionInterface $session
      */
-    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager, SessionInterface $session)
+    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager,
+                                TaskManager $taskManager, SessionInterface $session)
     {
         $this->manager = $manager;
         $this->logger = $logger;
         $this->profileManager = $profileManager;
         $this->session = $session;
+        $this->taskManager = $taskManager;
     }
 
     /* Getter/Setter methods */
@@ -100,6 +105,14 @@ class IntentHandler
         }
 
         return $this;
+    }
+
+    /**
+     * @return Profile|null
+     */
+    public function getProfile() : ?Profile
+    {
+        return $this->profileManager->getRepository()->findOneBy(['name' => $this->getSessionIdentifier()]);
     }
 
     /* Handler (called from the Controller) */
@@ -158,7 +171,7 @@ class IntentHandler
             return $message;
         }
         $identifier = $parameters[$intentParameters[0]];
-        if (null !== $profile = $this->manager->getRepository(Profile::class)->findOneBy(['name' => $identifier])) {
+        if (null !== $profile = $this->profileManager->getRepository()->findOneBy(['name' => $identifier])) {
             $message = sprintf(BotMessage::USING_PROFILE, $identifier);
             $this->setSessionIdentifier($profile->getName());
         } else {
@@ -166,6 +179,37 @@ class IntentHandler
         }
 
         return $message;
+    }
+
+    /**
+     * @param Intent $intent
+     * @return null|string
+     */
+    protected function addTask(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        $baseTime = $parameters[$intentParameters[0]];
+        $time = Helper::translateDate($baseTime);
+        if (null === $date = DateHelper::getDate($time)) {
+            return BotMessage::DATE_NOT_UNDERSTANDED;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::TASK_NOT_LOGGED_IN;
+        }
+
+        if (null !== $this->taskManager->getRepository()->findOneBy(['date' => $date, 'profile' => $profile])) {
+            return BotMessage::DATE_ALREADY_USED;
+        }
+
+        $this->taskManager->createAndFlushFromDateAndProfile($date, $profile);
+
+        return sprintf(BotMessage::DATE_SUCCESS, $baseTime);
     }
 
     /**
@@ -192,7 +236,7 @@ class IntentHandler
         }else {
             $message = sprintf('Impossible de trouver cette musique, être vous sûr du nom ?', $identifier);
         }
-        
+
         return array($message, $action);
     }
 
@@ -210,7 +254,7 @@ class IntentHandler
         $listNameMusic = [];
 
         foreach ($listMusic as $music) {
-            
+
             $listNameMusic[] = $music->getName();
 
         }
@@ -223,7 +267,7 @@ class IntentHandler
         }else {
             $message = sprintf('Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez');
         }
-        
+
         return array($message, $action);
     }
 
