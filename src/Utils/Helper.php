@@ -14,6 +14,11 @@ use Sonata\IntlBundle\Templating\Helper\DateTimeHelper;
 
 class Helper
 {
+    private static $englishMonths = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september',
+        'october', 'november', 'décember'];
+    private static $frenchMonths = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre',
+        'octobre', 'novembre', 'décembre'];
+
     /**
      * @param $haystack
      * @param $needle
@@ -68,23 +73,17 @@ class Helper
      */
     public static function translateDate($date)
     {
-        $englishMonths = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september',
-            'october', 'november', 'décember'];
-        $frenchMonths = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre',
-            'octobre', 'novembre', 'décembre'];
-
-        return str_replace($frenchMonths, $englishMonths, strtolower($date));
+        return str_replace(self::$frenchMonths, self::$englishMonths, strtolower($date));
     }
 
     /**
-     * @param DateTimeHelper $dateTimeHelper
      * @param \DateTimeInterface $date
      * @param string $format
      * @return string
      */
-    public static function formatDate(DateTimeHelper $dateTimeHelper, \DateTimeInterface $date, $format = "MMMM Y")
+    public static function formatDate(\DateTimeInterface $date, $format = "MMMM Y")
     {
-        return ucfirst($dateTimeHelper->format($date, $format));
+        return str_replace(array_map('ucfirst', self::$englishMonths), array_map('ucfirst', self::$frenchMonths), $date->format($format));
     }
 
 }

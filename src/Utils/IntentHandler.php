@@ -40,9 +40,6 @@ class IntentHandler
     /** @var TaskManager taskManager */
     private $taskManager;
 
-    /** @var DateTimeHelper dateTimeHelper */
-    private $dateTimeHelper;
-
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
@@ -50,17 +47,15 @@ class IntentHandler
      * @param ProfileManager $profileManager
      * @param TaskManager $taskManager
      * @param SessionInterface $session
-     * @param DateTimeHelper $dateTimeHelper
      */
     public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager,
-                                TaskManager $taskManager, SessionInterface $session, DateTimeHelper $dateTimeHelper)
+                                TaskManager $taskManager, SessionInterface $session)
     {
         $this->manager = $manager;
         $this->logger = $logger;
         $this->profileManager = $profileManager;
         $this->session = $session;
         $this->taskManager = $taskManager;
-        $this->dateTimeHelper = $dateTimeHelper;
     }
 
     /* Getter/Setter methods */
@@ -188,6 +183,7 @@ class IntentHandler
         return $message;
     }
 
+
     /**
      * @param Intent $intent
      * @return null|string
@@ -234,9 +230,41 @@ class IntentHandler
         }
 
         return [BotMessage::TASKS, 'List' => implode(', ', array_map(function (Task $task) {
-            return Helper::formatDate($this->dateTimeHelper, $task->getDate(), "d MMMM Y à H:m");
+            return Helper::formatDate($task->getDate(), 'd F Y \à H\hi');
         }, $tasks))];
     }
+
+    /**
+     * @param Intent $intent
+     * @return null|string
+     */
+    protected function removeTask(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        $baseTime = $parameters[$intentParameters[0]];
+        $time = Helper::translateDate($baseTime);
+        if (null === $date = DateHelper::getDate($time)) {
+            return BotMessage::DATE_NOT_UNDERSTANDED;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::TASK_NOT_LOGGED_IN;
+        }
+
+        if (null === $task = $this->taskManager->getRepository()->findOneBy(['date' => $date, 'profile' => $profile])) {
+            return BotMessage::DATE_NOT_FOUND;
+        }
+
+        $this->taskManager->removeEntity($task);
+
+        return BotMessage::TASK_REMOVED;
+    }
+
 
     /**
      * @param Intent $intent

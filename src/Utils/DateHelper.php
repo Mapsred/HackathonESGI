@@ -47,6 +47,8 @@ class DateHelper
         'd-m-Y H',
         'd-m-Y H:i',
         'd-m-Y H:i:s',
+        'd F Y \à H\hi',
+        'd F Y \à H\h',
     ];
 
     /**
@@ -56,6 +58,8 @@ class DateHelper
     public static function getDate($time)
     {
         $time = Helper::strReplaceFirst('le ', '', $time);
+        $time = Helper::strReplaceFirst('du ', '', $time);
+
         $dateFormats = array_merge(self::$dateDayFormats, self::$dateFormats, self::$dateMonthFormats);
         $date = null;
         foreach ($dateFormats as $format) {

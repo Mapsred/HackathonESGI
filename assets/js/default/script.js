@@ -13,6 +13,7 @@ var Bot = {
         Bot.inputText = $('#inputText');
         Bot.sendButton = $('#send');
         Bot.modelDiv = $(".model .message-model");
+        Bot.messageContainer = $('#messageContainer');
         Bot.user = "Invité";
         Bot.add = 0;
     },
@@ -30,6 +31,9 @@ var Bot = {
         clone.find('.name').html(name);
         clone.find('.text-content').html(message);
         clone.appendTo('#messageContainer');
+        Bot.messageContainer.animate({
+            scrollTop: Bot.messageContainer.prop("scrollHeight") - Bot.messageContainer.height()
+        }, 200);
     },
 
     replaceName: function (name) {
