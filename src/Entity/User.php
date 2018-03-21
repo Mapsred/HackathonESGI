@@ -5,10 +5,10 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Table(name="profile")
- * @ORM\Entity(repositoryClass="App\Repository\ProfileRepository")
+ * @ORM\Table(name="user")
+ * @ORM\Entity(repositoryClass="App\Repository\UserRepository")
  */
-class Profile
+class User
 {
     /**
      * @var int $id
@@ -20,24 +20,24 @@ class Profile
     private $id;
 
     /**
-     * @var string $name
-     * @ORM\Column(name="name", type="string", length=255)
+     * @var string $username
+     * @ORM\Column(name="username", type="string", length=255)
      */
-    private $name;
+    private $username;
 
     public function getId()
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getUsername()
     {
-        return $this->name;
+        return $this->username;
     }
 
-    public function setName(string $name): self
+    public function setUsername($username)
     {
-        $this->name = $name;
+        $this->username = $username;
 
         return $this;
     }
