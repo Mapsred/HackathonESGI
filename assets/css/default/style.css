@@ -18,3 +18,8 @@
     background-color: #3d6da7 !important;
     color: white !important;
 }
+
+#messageContainer.container {
+    max-height: 280px;
+    overflow-y: scroll;
+}
