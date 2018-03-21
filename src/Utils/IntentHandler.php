@@ -285,6 +285,10 @@ class IntentHandler
 
         $identifier = $parameters[$intentParameters[0]];
         if (null !== $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier])) {
+            $profile = $this->profileManager->getRepository()->findOneBy(['name' => 'Alexandre']);
+            $profile->addLink($music);
+            $this->manager->persist($profile);
+            $this->manager->flush();
             return [sprintf(BotMessage::LAUNCH_MUSIC, $identifier), 'Music' => $music->getUrl()];
         }
 
@@ -324,10 +328,10 @@ class IntentHandler
 
         $identifier = $parameters[$intentParameters[0]];
         if (null === $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
-            return [sprintf(BotMessage::MUSIC_ADD, $identifier), 'Add' => $identifier];
+            return [sprintf(BotMessage::LINK_ADD, $identifier), 'Add' => $identifier];
         }
 
-        return BotMessage::MUSIC_UNAVAILABLE;
+        return BotMessage::LINK_UNAVAILABLE;
     }
 
     /**

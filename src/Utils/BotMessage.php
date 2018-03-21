@@ -30,8 +30,8 @@ interface BotMessage
     const MUSIC_LIST = 'Voici la liste de vos musiques : ';
     const NO_MUSIC = 'Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez';
     const MUSIC_NOT_FOUND = 'Impossible de trouver la musique %s, être vous sûr du nom ?';
-    const MUSIC_ADD = 'Tu souhaites ajouter un(e) %s ? Quel est son nom ?';
-    const MUSIC_UNAVAILABLE = 'Impossible d\'ajouter ce genre de chose, être vous sûr du nom ?';
+    const LINK_ADD = 'Tu souhaites ajouter un(e) %s ? Quel est son nom ?';
+    const LINK_UNAVAILABLE = 'Impossible d\'ajouter ce genre de chose, être vous sûr du nom ?';
 
     const ROUTINE_NOT_LOGGED_IN = "Désolé, vous devez être connecté pour ajouter une routine";
     const ROUTING_ALREADY_EXISTING = 'La routine %s existe déjà';

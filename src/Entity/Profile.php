@@ -35,9 +35,9 @@ class Profile
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Link", inversedBy="profiles")
-     * @ORM\JoinTable(name="profile_link",
-     *   joinColumns={@ORM\JoinColumn(name="profile", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="link", referencedColumnName="id")}
+     * @ORM\JoinTable(name="profilelink",
+     *   joinColumns={@ORM\JoinColumn(name="profile_id", referencedColumnName="id")},
+     *   inverseJoinColumns={@ORM\JoinColumn(name="link_id", referencedColumnName="id")}
      * )
      */
     private $links;
