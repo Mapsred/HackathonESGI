@@ -107,6 +107,9 @@
             "ref": "aaddfdf43cdecd4cf91f992052d76c2cadc04543"
         }
     },
+    "sonata-project/intl-bundle": {
+        "version": "2.4.0"
+    },
     "symfony/asset": {
         "version": "v4.0.6"
     },
@@ -185,6 +188,9 @@
     "symfony/inflector": {
         "version": "v4.0.6"
     },
+    "symfony/intl": {
+        "version": "v4.0.6"
+    },
     "symfony/lts": {
         "version": "4-dev"
     },
@@ -220,6 +226,9 @@
             "version": "3.3",
             "ref": "41416370e732d1c8e7a0953a5ce815b641cfba0f"
         }
+    },
+    "symfony/polyfill-intl-icu": {
+        "version": "v1.7.0"
     },
     "symfony/polyfill-mbstring": {
         "version": "v1.7.0"
@@ -261,6 +270,9 @@
         "version": "v4.0.6"
     },
     "symfony/stopwatch": {
+        "version": "v4.0.6"
+    },
+    "symfony/templating": {
         "version": "v4.0.6"
     },
     "symfony/twig-bridge": {

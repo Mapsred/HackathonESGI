@@ -5,11 +5,13 @@ namespace App\Utils;
 use App\Entity\Intent;
 use App\Entity\Link;
 use App\Entity\Profile;
+use App\Entity\Task;
 use App\Entity\Type;
 use App\Manager\ProfileManager;
 use App\Manager\TaskManager;
 use Doctrine\Common\Persistence\ObjectManager;
 use Psr\Log\LoggerInterface;
+use Sonata\IntlBundle\Templating\Helper\DateTimeHelper;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -38,6 +40,9 @@ class IntentHandler
     /** @var TaskManager taskManager */
     private $taskManager;
 
+    /** @var DateTimeHelper dateTimeHelper */
+    private $dateTimeHelper;
+
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
@@ -45,15 +50,17 @@ class IntentHandler
      * @param ProfileManager $profileManager
      * @param TaskManager $taskManager
      * @param SessionInterface $session
+     * @param DateTimeHelper $dateTimeHelper
      */
     public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager,
-                                TaskManager $taskManager, SessionInterface $session)
+                                TaskManager $taskManager, SessionInterface $session, DateTimeHelper $dateTimeHelper)
     {
         $this->manager = $manager;
         $this->logger = $logger;
         $this->profileManager = $profileManager;
         $this->session = $session;
         $this->taskManager = $taskManager;
+        $this->dateTimeHelper = $dateTimeHelper;
     }
 
     /* Getter/Setter methods */
@@ -213,6 +220,25 @@ class IntentHandler
     }
 
     /**
+     * @return array|string
+     */
+    protected function listTasks()
+    {
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::TASKS_NOT_LOGGED_IN;
+        }
+
+        $tasks = $this->taskManager->getRepository()->findBy(['profile' => $profile]);
+        if (empty($tasks)) {
+            return BotMessage::NO_TASKS;
+        }
+
+        return [BotMessage::TASKS, 'List' => implode(', ', array_map(function (Task $task) {
+            return Helper::formatDate($this->dateTimeHelper, $task->getDate(), "d MMMM Y à H:m");
+        }, $tasks))];
+    }
+
+    /**
      * @param Intent $intent
      * @return array|null|string
      */
@@ -237,7 +263,7 @@ class IntentHandler
      */
     protected function listMusic()
     {
-        $typeMusic = $this->manager->getRepository(Type::class)->findBy(['name' => 'Music']);
+        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music']);
         $listMusic = $this->manager->getRepository(Link::class)->findBy(['type' => $typeMusic]);
         $listNameMusic = [];
         foreach ($listMusic as $music) {
