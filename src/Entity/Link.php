@@ -28,7 +28,8 @@ class Link
     private $url;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\ManyToOne(targetEntity="Type", inversedBy="links")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id")
      */
     private $type;
 

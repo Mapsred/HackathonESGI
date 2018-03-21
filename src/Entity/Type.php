@@ -21,6 +21,11 @@ class Type
      */
     private $name;
 
+    /**
+     * @ORM\OneToMany(targetEntity="Link", mappedBy="type")
+     */
+    private $links;
+
     public function getId()
     {
         return $this->id;
