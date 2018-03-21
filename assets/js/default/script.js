@@ -13,6 +13,7 @@ var Bot = {
         Bot.inputText = $('#inputText');
         Bot.sendButton = $('#send');
         Bot.modelDiv = $(".model .message-model");
+        Bot.user = "Invité";
     },
 
     keyPress: function () {
@@ -30,10 +31,18 @@ var Bot = {
         clone.appendTo('#messageContainer');
     },
 
+    replaceName: function (name) {
+      $('#messageContainer .message-model .name').each(function () {
+          if ($(this).text() !== "Djingo") {
+              $(this).html(name);
+          }
+      });
+    },
+
     send: function () {
         Bot.sendButton.click(function () {
             var message = Bot.inputText.val();
-            Bot.appendMessage(message, "Invité");
+            Bot.appendMessage(message, Bot.user);
             Bot.inputText.val("");
 
             $.ajax({
@@ -41,6 +50,8 @@ var Bot = {
                 type: "POST",
                 data: {'q': message},
                 success: function (res) {
+                    console.log(res);
+                    Bot.replaceName(res['name']);
                     var message = res['message'];
                     Bot.appendMessage(message, "Djingo");
                 }
