@@ -196,7 +196,7 @@ class IntentHandler
         return array($message, $action);
     }
 
-        /**
+    /**
      * @param Intent $intent
      * @return null|string
      */
@@ -222,6 +222,35 @@ class IntentHandler
 
         }else {
             $message = sprintf('Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez');
+        }
+        
+        return array($message, $action);
+    }
+
+    /**
+     * @param Intent $intent
+     * @return null|string
+     */
+    protected function addLink(Intent $intent)
+    {
+
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+
+        $type = $this->manager->getRepository(Type::class)->findByName(['name' => $identifier]);
+
+        if (null !== $type) {
+            $message = sprintf('Tu souhaites ajouter un(e) '.$identifier.' ? Quel son nom ?', $identifier);
+            $action['type'] = 'Add';
+            $action['info'] = $identifier;
+
+        }else {
+            $message = sprintf('Impossible d\'ajouter ce genre de chose, être vous sûr du nom ?', $identifier);
         }
         
         return array($message, $action);

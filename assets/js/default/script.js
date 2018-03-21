@@ -1,8 +1,11 @@
 $(document).ready(function () {
+
     Bot.init();
+
 });
 
 var Bot = {
+
     init: function () {
         Bot.initParameters();
         Bot.keyPress();
@@ -45,6 +48,41 @@ var Bot = {
             Bot.appendMessage(message, Bot.user);
             Bot.inputText.val("");
 
+            if (typeof Bot.add === "undefined") {
+                Bot.add = 0;
+            }
+
+            if (Bot.add == 1)
+            {
+                Bot.addName = message;
+                Bot.add++;
+                Bot.appendMessage('Très bien, et quel est le lien ?', "Djingo");
+
+            }
+            else if (Bot.add == 2)
+            {
+                Bot.addUrl = message;
+                Bot.appendMessage('Merci, je procède à l\'ajout', "Djingo");
+
+                Bot.add = 0;
+
+                $.ajax({
+                url: Routing.generate('add'),
+                type: "POST",
+                data: {'name': Bot.addName, 'url': Bot.addUrl},
+                success: function (res) {
+                    console.log(res);
+
+                    var message = res['message'];
+                    Bot.appendMessage(message, "Djingo");
+                }
+
+                });
+
+            }
+            else
+            {
+
             $.ajax({
                 url: Routing.generate('query'),
                 type: "POST",
@@ -62,13 +100,24 @@ var Bot = {
 
                     var blocked = 'Votre navigateur à bloqué le lancement, autorisez moi à le faire, s\'il vous plaît.';
 
+                    
+
 
                         if(message['1']['type'] == 'List'){
                         // LISTE
                         
                             Bot.appendMessage(message['1']['info'], "Djingo");
 
-                        }else if(message['1']['type'] == 'Music'){
+                        }else 
+                        
+                        if(message['1']['type'] == 'Add'){
+                        // AJOUT
+                        
+                            Bot.add++;
+
+                        }else
+
+                        if(message['1']['type'] == 'Music'){
                         // Jouer Musique
 
                         console.log(message['1']['info']);
@@ -88,6 +137,9 @@ var Bot = {
 
                 }
             });
+
+        }
+
         });
     }
 };
