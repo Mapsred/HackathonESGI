@@ -13,7 +13,6 @@ use App\Manager\ProfileManager;
 use App\Manager\RoutineManager;
 use App\Manager\TaskManager;
 use Doctrine\Common\Persistence\ObjectManager;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
@@ -30,9 +29,6 @@ class IntentHandler
     /** @var array $parameters */
     private $parameters;
 
-    /** @var LoggerInterface logger */
-    private $logger;
-
     /** @var ProfileManager profileManager */
     private $profileManager;
 
@@ -48,17 +44,15 @@ class IntentHandler
     /**
      * IntentHandler constructor.
      * @param ObjectManager $manager
-     * @param LoggerInterface $logger
      * @param ProfileManager $profileManager
      * @param TaskManager $taskManager
      * @param RoutineManager $routineManager
      * @param SessionInterface $session
      */
-    public function __construct(ObjectManager $manager, LoggerInterface $logger, ProfileManager $profileManager,
+    public function __construct(ObjectManager $manager, ProfileManager $profileManager,
                                 TaskManager $taskManager, RoutineManager $routineManager, SessionInterface $session)
     {
         $this->manager = $manager;
-        $this->logger = $logger;
         $this->profileManager = $profileManager;
         $this->session = $session;
         $this->taskManager = $taskManager;
@@ -152,7 +146,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -176,7 +170,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
         $identifier = $parameters[$intentParameters[0]];
@@ -199,7 +193,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -249,7 +243,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -281,7 +275,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -327,7 +321,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -347,7 +341,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -385,7 +379,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -409,7 +403,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -433,7 +427,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -475,7 +469,7 @@ class IntentHandler
     {
         $parameters = $this->getParameters();
         $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
             return $message;
         }
 
@@ -496,28 +490,16 @@ class IntentHandler
     /**
      * @param array $intentParameters
      * @param array $parameters
-     * @param string $intentName
      * @return null|string
      */
-    private function verifyParameters(array $intentParameters, array $parameters, string $intentName)
+    private function verifyParameters(array $intentParameters, array $parameters)
     {
         foreach ($intentParameters as $identifier) {
             if (!isset($parameters[$identifier])) {
-                $this->log(sprintf('Le paramètre %s n\'a pas été trouvé pour l\'intent %s', $identifier, $intentName));
-
                 return BotMessage::WRONG_FORMED_MESSAGE;
             }
         }
 
         return null;
-    }
-
-    /**
-     * @param $message
-     * @param string $type
-     */
-    private function log($message, $type = 'info')
-    {
-        call_user_func_array([$this->logger, $type], [$message]);
     }
 }
