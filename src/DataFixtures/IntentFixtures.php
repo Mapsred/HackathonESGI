@@ -19,7 +19,7 @@ class IntentFixtures extends Fixture
             ['name' => 'addTask', 'parameters' => ['TaskDate']],
 
             ['name' => 'launchMusic', 'parameters' => ['MusicIdentifier']],
-            ['name' => 'listMusic', 'parameters' => []],
+            ['name' => 'listLink', 'parameters' => ['LinkIdentifier']],
 
             ['name' => 'addLink', 'parameters' => ['LinkIdentifier']],
             ['name' => 'preferedLink', 'parameters' => ['LinkIdentifier']],

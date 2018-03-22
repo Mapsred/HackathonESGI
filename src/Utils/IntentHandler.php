@@ -295,9 +295,10 @@ class IntentHandler
     }
 
     /**
+     * @param Intent $intent
      * @return array|null|string
      */
-    protected function listMusic()
+    protected function listLink(Intent $intent)
     {
         $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Musique']);
         $listMusic = $this->manager->getRepository(Link::class)->findBy(['type' => $typeMusic]);
