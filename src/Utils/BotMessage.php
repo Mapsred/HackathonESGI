@@ -28,8 +28,8 @@ interface BotMessage
     const TASK_REMOVED = 'Votre rendez-vous a bien été supprimé';
 
     const LAUNCH_MUSIC = 'Je lance la musique : %s';
-    const MUSIC_LIST = 'Voici la liste de vos musiques : ';
-    const NO_MUSIC = 'Vous n\'avez aucune musique enregistrée, mais je peux en ajouter si vous le souhaitez';
+    const LINK_LIST = 'Voici la liste de vos %s : ';
+    const NO_LINK = 'Vous n\'avez aucun(e) %s enregistré(e), mais je peux en ajouter si vous le souhaitez';
     const MUSIC_NOT_FOUND = 'Impossible de trouver la musique %s, être vous sûr du nom ?';
     const LINK_ADD = 'Tu souhaites ajouter un(e) %s ? Quel est son nom ?';
     const LINK_UNAVAILABLE = 'Impossible d\'ajouter ce genre de chose, être vous sûr du nom ?';

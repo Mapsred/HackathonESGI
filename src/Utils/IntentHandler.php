@@ -300,18 +300,32 @@ class IntentHandler
      */
     protected function listLink(Intent $intent)
     {
-        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Musique']);
-        $listMusic = $this->manager->getRepository(Link::class)->findBy(['type' => $typeMusic]);
-        $listNameMusic = [];
-        foreach ($listMusic as $music) {
-            $listNameMusic[] = $music->getName();
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
+            return $message;
         }
 
-        if (!empty($listMusic)) {
-            return [BotMessage::MUSIC_LIST, 'List' => implode(', ', $listNameMusic)];
+        $identifier = $parameters[$intentParameters[0]];
+           
+        if(ucfirst($identifier) == 'Série' || ucfirst($identifier) == 'Séries' || ucfirst($identifier) == 'Series'){
+            $identifier = 'Serie';
+        }
+        if(ucfirst($identifier) == 'Musiques'){
+            $identifier = 'Musique';
+        }
+        $type = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier]);
+        $list = $this->manager->getRepository(Link::class)->findBy(['type' => $type]);
+        $listNames = [];
+        foreach ($list as $link) {
+            $listNames[] = $link->getName();
         }
 
-        return BotMessage::NO_MUSIC;
+        if (!empty($list)) {
+            $identifier = lcfirst($identifier).'s';
+            return [sprintf(BotMessage::LINK_LIST, $identifier), 'List' => implode(', ', $listNames)];
+        }
+        return sprintf(BotMessage::NO_LINK, $identifier);
     }
 
     /**
