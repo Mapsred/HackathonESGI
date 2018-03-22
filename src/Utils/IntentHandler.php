@@ -304,7 +304,7 @@ class IntentHandler
      */
     protected function listMusic()
     {
-        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music']);
+        $typeMusic = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Musique']);
         $listMusic = $this->manager->getRepository(Link::class)->findBy(['type' => $typeMusic]);
         $listNameMusic = [];
         foreach ($listMusic as $music) {
@@ -362,7 +362,11 @@ class IntentHandler
                     }
                 }
                 $linksArrayCount[] = array_count_values($linksArray);
-                $preferedLink = array_search(max($linksArrayCount['0']),$linksArrayCount['0']);
+                if(!empty($preferedLink)){
+                    $preferedLink = array_search(max($linksArrayCount['0']),$linksArrayCount['0']);
+                }else{
+                    $preferedLink = 'Vous n\'avez pas encore lancé une seule '.$identifier.'.';
+                }
                 return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'List' => $preferedLink];
         }
 
