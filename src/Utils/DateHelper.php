@@ -10,11 +10,6 @@ namespace App\Utils;
  */
 class DateHelper
 {
-    /** @var array $dateDayFormats */
-    private static $dateDayFormats = [
-        'd',
-    ];
-
     /** @var array $dateMonthFormats */
     private static $dateMonthFormats = [
         'd/m',
@@ -27,26 +22,19 @@ class DateHelper
         'd F \à H\hi',
         'd F H\h',
         'd F H\hi',
+        'd F',
+    ];
+
+    /**
+     * @var array noTimeFormats
+     */
+    private static $noTimeFormats = [
+        'd/m',
+        'd F',
     ];
 
     /** @var array $dateFormats */
     private static $dateFormats = [
-        'Y-m-d',
-        'Y-m-d H',
-        'Y-m-d H:i',
-        'Y-m-d H:i:s',
-        'Y/m/d',
-        'Y/m/d H',
-        'Y/m/d H:i',
-        'Y/m/d H:i:s',
-        'd/m/Y',
-        'd/m/Y H',
-        'd/m/Y H:i',
-        'd/m/Y H:i:s',
-        'd-m-Y',
-        'd-m-Y H',
-        'd-m-Y H:i',
-        'd-m-Y H:i:s',
         'd F Y \à H\hi',
         'd F Y \à H\h',
     ];
@@ -60,7 +48,7 @@ class DateHelper
         $time = Helper::strReplaceFirst('le ', '', $time);
         $time = Helper::strReplaceFirst('du ', '', $time);
 
-        $dateFormats = array_merge(self::$dateDayFormats, self::$dateFormats, self::$dateMonthFormats);
+        $dateFormats = array_merge(self::$dateFormats, self::$dateMonthFormats, self::$noTimeFormats);
         $date = null;
         foreach ($dateFormats as $format) {
             $date = \DateTime::createFromFormat($format, $time);
@@ -80,10 +68,12 @@ class DateHelper
     private static function manageFormat(\DateTime $date, $format)
     {
         $currentDate = new \DateTime();
-        if (in_array($format, self::$dateDayFormats)) {
-            $date->setDate($currentDate->format('Y'), $currentDate->format('m'), $date->format('d'));
-        } elseif (in_array($format, self::$dateMonthFormats)) {
+        if (in_array($format, self::$dateMonthFormats)) {
             $date->setDate($currentDate->format('Y'), $date->format('m'), $date->format('d'));
+        }
+
+        if (in_array($format, self::$noTimeFormats)) {
+            $date->setTime(0, 0, 0, 0);
         }
 
         return $date;
