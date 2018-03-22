@@ -58,7 +58,6 @@ var Bot = {
         if (typeof message['List'] !== "undefined") {
             Bot.appendMessage(message['List'], "Djingo"); // LISTE
         } else if (typeof message['Music'] !== "undefined") {
-            console.log(message['Music']);
             var launch = window.open(message['Music'], '_blank'); // Jouer Musique
             window.blur();
             window.focus();

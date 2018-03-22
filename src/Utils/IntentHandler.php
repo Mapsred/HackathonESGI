@@ -351,17 +351,19 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-        if (null === $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
+        if (null !== $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
                 $profile = $this->getProfile();
                 $listLinks = $this->manager->getRepository(ProfileLink::class)->findBy(['profile' => $profile]);
+                $linksArray = [];
                 foreach ($listLinks as $listLink) {
                     $link = $listLink->getLink();
-                    $link2 = $link->getType()->getName(); 
-                    /*if($link->getType()->getName() = $identifier){
-                    
-                    }*/
+                    if($link->getType()->getName() == ucfirst($identifier)){
+                        $linksArray[] = $link->getName();
+                    }
                 }
-                return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'Prefered' => $identifier];
+                $linksArrayCount[] = array_count_values($linksArray);
+                $preferedLink = array_search(max($linksArrayCount['0']),$linksArrayCount['0']);
+                return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'List' => $preferedLink];
         }
 
         return BotMessage::PREFERED_UNAVAILABLE;

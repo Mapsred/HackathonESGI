@@ -22,12 +22,14 @@ class ProfileLink
     /**
      * @var Link $link
      * @ORM\ManyToOne(targetEntity="App\Entity\Link", inversedBy="profileLinks")
+     * @ORM\JoinColumn(name="id_link", referencedColumnName="id", nullable=false) 
      */
     private $link;
 
     /**
      * @var Profile $profile
      * @ORM\ManyToOne(targetEntity="App\Entity\Profile", inversedBy="profileLinks")
+     * @ORM\JoinColumn(name="id_profile", referencedColumnName="id", nullable=false) 
      */
     private $profile;
 
