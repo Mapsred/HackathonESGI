@@ -29,7 +29,7 @@ class Link
 
     /**
      * @var string $url
-     * @ORM\Column(name="url", type="string", length=255)
+     * @ORM\Column(name="url", type="text")
      */
     private $url;
 
