@@ -12,7 +12,7 @@ class TypeFixtures extends Fixture
     {
         $types = [
             ['name' => 'Musique'],
-            ['name' => 'Série'],
+            ['name' => 'Serie'],
         ];
 
         foreach ($types as $data) {
