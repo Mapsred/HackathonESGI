@@ -33,15 +33,17 @@ class Profile
      */
     private $tasks;
 
-    /** 
-    * @ORM\OneToMany(targetEntity="ProfileLink", mappedBy="hobbit") 
-    */
-    private $profileLink;
-
     /**
+     * @var ArrayCollection|Routine[]
      * @ORM\OneToMany(targetEntity="App\Entity\Routine", mappedBy="profile")
      */
     private $routines;
+
+    /**
+     * @var ArrayCollection|ProfileLink
+     * @ORM\OneToMany(targetEntity="App\Entity\ProfileLink", mappedBy="profile")
+     */
+    private $profileLinks;
 
     /**
      * Profile constructor.
@@ -49,8 +51,8 @@ class Profile
     public function __construct()
     {
         $this->tasks = new ArrayCollection();
-        $this->links = new ArrayCollection();
         $this->routines = new ArrayCollection();
+        $this->profileLinks = new ArrayCollection();
     }
 
     /**
@@ -120,13 +122,17 @@ class Profile
     }
 
     /**
-     * @return Collection|Routine[]
+     * @return ArrayCollection|Routine[]
      */
     public function getRoutines(): Collection
     {
         return $this->routines;
     }
 
+    /**
+     * @param Routine $routine
+     * @return Profile
+     */
     public function addRoutine(Routine $routine): self
     {
         if (!$this->routines->contains($routine)) {
@@ -137,6 +143,10 @@ class Profile
         return $this;
     }
 
+    /**
+     * @param Routine $routine
+     * @return Profile
+     */
     public function removeRoutine(Routine $routine): self
     {
         if ($this->routines->contains($routine)) {
@@ -144,6 +154,45 @@ class Profile
             // set the owning side to null (unless already changed)
             if ($routine->getProfile() === $this) {
                 $routine->setProfile(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return ArrayCollection|ProfileLink[]
+     */
+    public function getProfileLinks(): Collection
+    {
+        return $this->profileLinks;
+    }
+
+    /**
+     * @param ProfileLink $profileLink
+     * @return Profile
+     */
+    public function addProfileLink(ProfileLink $profileLink): self
+    {
+        if (!$this->profileLinks->contains($profileLink)) {
+            $this->profileLinks[] = $profileLink;
+            $profileLink->setProfile($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param ProfileLink $profileLink
+     * @return Profile
+     */
+    public function removeProfileLink(ProfileLink $profileLink): self
+    {
+        if ($this->profileLinks->contains($profileLink)) {
+            $this->profileLinks->removeElement($profileLink);
+            // set the owning side to null (unless already changed)
+            if ($profileLink->getProfile() === $this) {
+                $profileLink->setProfile(null);
             }
         }
 

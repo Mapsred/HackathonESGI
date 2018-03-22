@@ -35,22 +35,23 @@ class Link
 
     /**
      * @var Type $type
-     * @ORM\ManyToOne(targetEntity="Type")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Type")
      * @ORM\JoinColumn(name="type", referencedColumnName="id")
      */
     private $type;
 
-    /** 
-    * @ORM\OneToMany(targetEntity="ProfileLink", mappedBy="hobbit") 
-    */
-    private $profileLink;
+    /**
+     * @var ArrayCollection|ProfileLink[]
+     * @ORM\OneToMany(targetEntity="App\Entity\ProfileLink", mappedBy="link")
+     */
+    private $profileLinks;
 
     /**
      * Link constructor.
      */
     public function __construct()
     {
-        $this->profiles = new ArrayCollection();
+        $this->profileLinks = new ArrayCollection();
     }
 
     /**
@@ -119,36 +120,39 @@ class Link
     }
 
     /**
-     * @return ArrayCollection|Profile[]
+     * @return Collection|ProfileLink[]
      */
-    public function getProfiles(): Collection
+    public function getProfileLinks(): Collection
     {
-        return $this->profiles;
+        return $this->profileLinks;
     }
 
     /**
-     * @param Profile $profile
+     * @param ProfileLink $profileLink
      * @return Link
      */
-    public function addProfile(Profile $profile): self
+    public function addProfileLink(ProfileLink $profileLink): self
     {
-        if (!$this->profiles->contains($profile)) {
-            $this->profiles[] = $profile;
-            $profile->addLink($this);
+        if (!$this->profileLinks->contains($profileLink)) {
+            $this->profileLinks[] = $profileLink;
+            $profileLink->setLink($this);
         }
 
         return $this;
     }
 
     /**
-     * @param Profile $profile
+     * @param ProfileLink $profileLink
      * @return Link
      */
-    public function removeProfile(Profile $profile): self
+    public function removeProfileLink(ProfileLink $profileLink): self
     {
-        if ($this->profiles->contains($profile)) {
-            $this->profiles->removeElement($profile);
-            $profile->removeLink($this);
+        if ($this->profileLinks->contains($profileLink)) {
+            $this->profileLinks->removeElement($profileLink);
+            // set the owning side to null (unless already changed)
+            if ($profileLink->getLink() === $this) {
+                $profileLink->setLink(null);
+            }
         }
 
         return $this;
