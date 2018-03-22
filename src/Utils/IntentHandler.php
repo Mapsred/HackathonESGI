@@ -319,18 +319,20 @@ class IntentHandler
      */
     protected function addLink(Intent $intent)
     {
-        $parameters = $this->getParameters();
-        $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
-            return $message;
-        }
+        if(!empty($this->getProfile())){ 
+            $parameters = $this->getParameters();
+            $intentParameters = $intent->getParameters();
+            if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
+                return $message;
+            }
 
-        $identifier = $parameters[$intentParameters[0]];
-        if (null !== $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
-            return [sprintf(BotMessage::LINK_ADD, $identifier), 'Add' => $identifier];
+            $identifier = $parameters[$intentParameters[0]];
+            if (null !== $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
+                return [sprintf(BotMessage::LINK_ADD, $identifier), 'Add' => $identifier];
+            }
+            return BotMessage::LINK_UNAVAILABLE;
         }
-
-        return BotMessage::LINK_UNAVAILABLE;
+        return BotMessage::NOT_CONNECTED;
     }
 
     /**
@@ -339,35 +341,42 @@ class IntentHandler
      */
     protected function preferedLink(Intent $intent)
     {
-        $parameters = $this->getParameters();
-        $intentParameters = $intent->getParameters();
-        if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
-            return $message;
-        }
+        if(!empty($this->getProfile())){    
+            $parameters = $this->getParameters();
+            $intentParameters = $intent->getParameters();
+            if (null !== $message = $this->verifyParameters($intentParameters, $parameters)) {
+                return $message;
+            }
 
-        $identifier = $parameters[$intentParameters[0]];
+            $identifier = $parameters[$intentParameters[0]];
 
-        if (null !== $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
-                $profile = $this->getProfile();
-                $listLinks = $this->manager->getRepository(ProfileLink::class)->findBy(['profile' => $profile]);
-                $linksArray = [];
-                foreach ($listLinks as $listLink) {
-                    $link = $listLink->getLink();
-                    if($link->getType()->getName() == ucfirst($identifier)){
-                        $linksArray[] = $link->getName();
+            if(ucfirst($identifier) == 'Série'){
+                $identifier = 'Serie';
+            }
+
+            if (null !== $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
+                    $profile = $this->getProfile();
+                    $listLinks = $this->manager->getRepository(ProfileLink::class)->findBy(['profile' => $profile]);
+                    $linksArray = [];
+                    foreach ($listLinks as $listLink) {
+                        $link = $listLink->getLink();
+                        if($link->getType()->getName() == ucfirst($identifier)){
+                            $linksArray[] = $link->getName();
+                        }
                     }
-                }
-                
-                if(count($linksArray) >= 1){
-                    $linksArrayCount[] = array_count_values($linksArray);
-                    $preferedLink = array_search(max($linksArrayCount['0']),$linksArrayCount['0']);
-                }else{
-                    $preferedLink = 'Vous n\'avez pas encore lancé une seule '.$identifier.'.';
-                }
-                return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'List' => $preferedLink];
+                    
+                    if(count($linksArray) >= 1){
+                        $linksArrayCount[] = array_count_values($linksArray);
+                        $preferedLink = array_search(max($linksArrayCount['0']),$linksArrayCount['0']);
+                    }else{
+                        $preferedLink = 'Vous n\'avez pas encore lancé une seule '.$identifier.'.';
+                    }
+                    return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'List' => $preferedLink];
+            }
+            return BotMessage::PREFERED_UNAVAILABLE;
         }
+        return BotMessage::NOT_CONNECTED;
 
-        return BotMessage::PREFERED_UNAVAILABLE;
     }
 
 

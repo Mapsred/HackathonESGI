@@ -15,6 +15,7 @@ interface BotMessage
 
     const NON_EXISTING_PROFILE = 'Désolé, le profil avec l\'identifiant <b>%s</b> n\'existe pas';
     const USING_PROFILE = 'Bien reçu, vous êtes maintenant connectés avec l\'identifiant <b>%s</b>';
+    const NOT_CONNECTED = 'Vous devez être connecté pour me demander cela';
 
     const DATE_NOT_UNDERSTANDED = 'Désolé, je n\'ai pas bien compris votre date, pourriez vous essayer de reformuler différemment ?';
     const DATE_ALREADY_USED = 'Désolé, vous avez déjà un rendez-vous à cette date';
