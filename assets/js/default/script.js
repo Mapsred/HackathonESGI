@@ -67,13 +67,7 @@ var Bot = {
             }
         } else if (typeof message['Add'] !== "undefined") {
             Bot.add++;
-            console.log(message['Add']);
-            if (message['Add'] = 'Musique')
-            {
-                Bot.addType = 'Music';
-            }
-            
-
+            Bot.addType = message['Add'];
         } else if (typeof message['AddRoutine'] !== "undefined") {
             Bot.routine.isOnRoutine = 1;
             Bot.routine.routineName = message['AddRoutine'];

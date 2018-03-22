@@ -331,7 +331,7 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-        if (null === $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
+        if (null !== $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
             return [sprintf(BotMessage::LINK_ADD, $identifier), 'Add' => $identifier];
         }
 
