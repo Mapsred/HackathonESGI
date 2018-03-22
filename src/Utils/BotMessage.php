@@ -27,7 +27,7 @@ interface BotMessage
     const TASKS_NOT_LOGGED_IN = "Désolé, vous devez être connecté pour voir vos tâches";
     const TASK_REMOVED = 'Votre rendez-vous a bien été supprimé';
 
-    const LAUNCH_MUSIC = 'Je lance la musique : %s';
+    const LAUNCH_LINK = 'Je lance : %s';
     const LINK_LIST = 'Voici la liste de vos %s : ';
     const NO_LINK = 'Vous n\'avez aucun(e) %s enregistré(e), mais je peux en ajouter si vous le souhaitez';
     const MUSIC_NOT_FOUND = 'Impossible de trouver la musique %s, être vous sûr du nom ?';

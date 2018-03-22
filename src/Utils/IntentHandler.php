@@ -281,14 +281,16 @@ class IntentHandler
 
         $identifier = $parameters[$intentParameters[0]];
         if (null !== $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier])) {
+            if(!empty($this->getProfile())){ 
             $profile = $this->getProfile();
             $newProfileLink = new ProfileLink;
             $newProfileLink->setProfile($profile);
             $newProfileLink->setLink($music);
             $this->manager->persist($newProfileLink);
             $this->manager->flush();
+            }
 
-            return [sprintf(BotMessage::LAUNCH_MUSIC, $identifier), 'Music' => $music->getUrl()];
+            return [sprintf(BotMessage::LAUNCH_LINK, $identifier), 'Music' => $music->getUrl()];
         }
 
         return sprintf(BotMessage::MUSIC_NOT_FOUND, $identifier);
