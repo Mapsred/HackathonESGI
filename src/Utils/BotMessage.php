@@ -40,5 +40,8 @@ interface BotMessage
     const ROUTING_NOT_EXISTING = 'La routine %s n\'existe pas';
     const ROUTING_ADDING = 'Tu souhaites ajouter une routine ? Quelles actions veux-tu y ajouter ?';
     const ROUTING_LAUNCHING = 'La routine %s se lance.';
+    const ROUTING_LISTING = 'La routine %s contient les tâches suivantes.';
     const ROUTING_REMOVING = 'La routine %s a été supprimée.';
+    const NO_ROUTING = 'Désolé, vous n\'avez encore aucune routine de définie';
+    const ROUTINGS = 'Voici la liste de vos routines.';
 }

@@ -6,6 +6,7 @@ use App\Entity\Intent;
 use App\Entity\Link;
 use App\Entity\Profile;
 use App\Entity\ProfileLink;
+use App\Entity\Routine;
 use App\Entity\Task;
 use App\Entity\Type;
 use App\Manager\ProfileManager;
@@ -351,6 +352,7 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
+
         if (null !== $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
                 $profile = $this->getProfile();
                 $listLinks = $this->manager->getRepository(ProfileLink::class)->findBy(['profile' => $profile]);
@@ -361,8 +363,9 @@ class IntentHandler
                         $linksArray[] = $link->getName();
                     }
                 }
-                $linksArrayCount[] = array_count_values($linksArray);
-                if(!empty($preferedLink)){
+                
+                if(count($linksArray) >= 1){
+                    $linksArrayCount[] = array_count_values($linksArray);
                     $preferedLink = array_search(max($linksArrayCount['0']),$linksArrayCount['0']);
                 }else{
                     $preferedLink = 'Vous n\'avez pas encore lancé une seule '.$identifier.'.';
@@ -372,6 +375,7 @@ class IntentHandler
 
         return BotMessage::PREFERED_UNAVAILABLE;
     }
+
 
     /**
      * @param Intent $intent
@@ -419,7 +423,6 @@ class IntentHandler
         }
 
         return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
-
     }
 
     /**
@@ -447,6 +450,45 @@ class IntentHandler
 
         return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
 
+    }
+
+    /**
+     * @return array|string
+     */
+    protected function listRoutines()
+    {
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::ROUTINE_NOT_LOGGED_IN;
+        }
+
+        $routines = $this->routineManager->getRepository()->findBy(['profile' => $profile]);
+        if (empty($routines)) {
+            return BotMessage::NO_ROUTING;
+        }
+
+        return [BotMessage::ROUTINGS, 'List' => implode(", ", array_map(function (Routine $routine) {
+            return $routine->getName();
+        }, $routines))];
+    }
+
+    protected function listRoutine(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::ROUTINE_NOT_LOGGED_IN;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+        if (null !== $routine = $this->routineManager->getRepository()->findOneByProfileAndName($profile, $identifier)) {
+            return [sprintf(BotMessage::ROUTING_LAUNCHING, $identifier), 'List' => implode(', ', $routine->getTasks())];
+        }
+
+        return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
     }
 
     /* Helper methods */
