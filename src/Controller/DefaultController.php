@@ -58,7 +58,6 @@ class DefaultController extends Controller
      */
     public function addAction(Request $request)
     {
-
         $name = $request->get('name');
         $url = $request->get('url');
         $type = $request->get('type');
