@@ -292,6 +292,7 @@ class IntentHandler
             $newProfileLink->setLink($music);
             $this->manager->persist($newProfileLink);
             $this->manager->flush();
+
             return [sprintf(BotMessage::LAUNCH_MUSIC, $identifier), 'Music' => $music->getUrl()];
         }
 
@@ -351,8 +352,7 @@ class IntentHandler
 
         $identifier = $parameters[$intentParameters[0]];
         if (null === $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
-                $profile = $this->profileManager->getRepository()->findOneBy(['name' => $this->getSessionIdentifier()]);
-                $listPrefered = $profile->getLinks();
+                $profile = $this->getProfile();
                 return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'Prefered' => $listPrefered];
         }
 
@@ -376,11 +376,63 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-        if (null === $this->routineManager->getRepository()->findOneBy(['name' => $identifier])) {
+        if (null === $this->routineManager->getRepository()->findOneByProfileAndName($profile, $identifier)) {
             return [sprintf(BotMessage::ROUTING_ADDING, $identifier), 'AddRoutine' => $identifier];
         }
 
         return BotMessage::ROUTING_ALREADY_EXISTING;
+    }
+
+    /**
+     * @param Intent $intent
+     * @return array|null|string
+     */
+    protected function launchRoutine(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::ROUTINE_NOT_LOGGED_IN;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+        if (null !== $routine = $this->routineManager->getRepository()->findOneByProfileAndName($profile, $identifier)) {
+            return [sprintf(BotMessage::ROUTING_LAUNCHING, $identifier), 'LaunchRoutine' => $routine->getTasks()];
+        }
+
+        return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
+
+    }
+
+    /**
+     * @param Intent $intent
+     * @return array|null|string
+     */
+    protected function removeRoutine(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::ROUTINE_NOT_LOGGED_IN;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+        if (null !== $routine = $this->routineManager->getRepository()->findOneByProfileAndName($profile, $identifier)) {
+            $this->routineManager->removeEntity($routine);
+
+            return sprintf(BotMessage::ROUTING_REMOVING, $identifier);
+        }
+
+        return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
+
     }
 
     /* Helper methods */
