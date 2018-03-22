@@ -5,54 +5,74 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="profile_link")
  * @ORM\Entity(repositoryClass="App\Repository\ProfileLinkRepository")
  */
 class ProfileLink
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @var int $id
+     *
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
      */
     private $id;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Profile", inversedBy="profileLink")
-    * @ORM\JoinColumn(name="id_profile", referencedColumnName="id", nullable=false) 
-    */
+     * @var Link $link
+     * @ORM\ManyToOne(targetEntity="App\Entity\Link", inversedBy="profileLinks")
+     */
+    private $link;
+
+    /**
+     * @var Profile $profile
+     * @ORM\ManyToOne(targetEntity="App\Entity\Profile", inversedBy="profileLinks")
+     */
     private $profile;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Link", inversedBy="profileLink")
-    * @ORM\JoinColumn(name="id_link", referencedColumnName="id", nullable=false) 
-    */
-    private $link;
-
+     * @return int
+     */
     public function getId()
     {
         return $this->id;
     }
 
-    public function getProfile(): ?int
-    {
-        return $this->profile;
-    }
-
-    public function setProfile($profile): self
-    {
-        $this->profile = $profile;
-
-        return $this;
-    }
-
-    public function getLink(): ?int
+    /**
+     * @return Link|null
+     */
+    public function getLink(): ?Link
     {
         return $this->link;
     }
 
-    public function setLink($link): self
+    /**
+     * @param Link|null $link
+     * @return ProfileLink
+     */
+    public function setLink(?Link $link): self
     {
         $this->link = $link;
+
+        return $this;
+    }
+
+    /**
+     * @return Profile|null
+     */
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    /**
+     * @param Profile|null $profile
+     * @return ProfileLink
+     */
+    public function setProfile(?Profile $profile): self
+    {
+        $this->profile = $profile;
 
         return $this;
     }
