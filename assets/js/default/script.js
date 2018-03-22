@@ -67,6 +67,13 @@ var Bot = {
             }
         } else if (typeof message['Add'] !== "undefined") {
             Bot.add++;
+            console.log(message['Add']);
+            if (message['Add'] = 'Musique')
+            {
+                Bot.addType = 'Music';
+            }
+            
+
         } else if (typeof message['AddRoutine'] !== "undefined") {
             Bot.routine.isOnRoutine = 1;
             Bot.routine.routineName = message['AddRoutine'];
@@ -84,7 +91,7 @@ var Bot = {
         $.ajax({
             url: Routing.generate('add'),
             type: "POST",
-            data: {'name': Bot.addName, 'url': Bot.addUrl},
+            data: {'name': Bot.addName, 'url': Bot.addUrl, 'type' : Bot.addType},
             success: function (res) {
                 console.log(res);
                 var message = res['message'];

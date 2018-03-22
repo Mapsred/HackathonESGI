@@ -33,7 +33,7 @@ class ProfileLink
         return $this->id;
     }
 
-    public function getProfile(): ?int
+    public function getProfile()
     {
         return $this->profile;
     }
@@ -45,7 +45,7 @@ class ProfileLink
         return $this;
     }
 
-    public function getLink(): ?int
+    public function getLink()
     {
         return $this->link;
     }

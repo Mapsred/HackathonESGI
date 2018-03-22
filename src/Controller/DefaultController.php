@@ -61,8 +61,8 @@ class DefaultController extends Controller
 
         $name = $request->get('name');
         $url = $request->get('url');
-
-        $typeMusic = $this->getDoctrine()->getManager()->getRepository(Type::class)->findOneBy(['name' => 'Music']);
+        $type = $request->get('type');
+        $findType = $this->getDoctrine()->getManager()->getRepository(Type::class)->findOneBy(['name' => $type]);
 
         $result = 'je n\'arrive pas à l\'ajouter...';
 
@@ -70,7 +70,7 @@ class DefaultController extends Controller
             $newLink = new Link;
             $newLink->setName($name);
             $newLink->setUrl($url);
-            $newLink->setType($typeMusic);
+            $newLink->setType($findType);
             $this->getDoctrine()->getManager()->persist($newLink);
             $this->getDoctrine()->getManager()->flush();
 
