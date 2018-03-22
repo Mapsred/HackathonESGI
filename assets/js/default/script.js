@@ -70,6 +70,10 @@ var Bot = {
         } else if (typeof message['AddRoutine'] !== "undefined") {
             Bot.routine.isOnRoutine = 1;
             Bot.routine.routineName = message['AddRoutine'];
+        }else if (typeof message['LaunchRoutine'] !== "undefined") {
+            $.each(message['LaunchRoutine'], function (key, message) {
+                Bot.query(message);
+            });
         }
     },
 

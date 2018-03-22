@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Profile;
 use App\Entity\Routine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -9,42 +10,27 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
 /**
  * @method Routine|null find($id, $lockMode = null, $lockVersion = null)
  * @method Routine|null findOneBy(array $criteria, array $orderBy = null)
- * @method Routine[]    findAll()
- * @method Routine[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Routine[] findAll()
+ * @method Routine[] findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class RoutineRepository extends ServiceEntityRepository
 {
+    /**
+     * RoutineRepository constructor.
+     * @param RegistryInterface $registry
+     */
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Routine::class);
     }
 
-//    /**
-//     * @return Routine[] Returns an array of Routine objects
-//     */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Profile $profile
+     * @param string $name
+     * @return Routine
+     */
+    public function findOneByProfileAndName(Profile $profile, string $name)
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        return $this->findOneBy(['profile' => $profile, 'name' => $name]);
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Routine
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
