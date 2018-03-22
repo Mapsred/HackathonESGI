@@ -3,10 +3,11 @@
     <div class="container">
         <div class="row">
             <div class="panel panel-default">
-                <div class="panel-heading">ChatBot!</div>
+                <div class="panel-heading">
+                    <img src="{{ asset('assets/img/botdjingo.svg') }}">
+                </div>
                 <div class="panel-body no-padding">
-                    <div class="container" id="messageContainer">
-                    </div>
+                    <div class="container" id="messageContainer"></div>
                 </div>
                 <div class="panel-footer">
                     <div class="input-group">
@@ -19,7 +20,7 @@
                 </div>
             </div>
             <div class="panel panel-default">
-                <div class="panel-heading">Guide utilisateur</div>
+                <div class="panel-heading panel-heading-user">Guide utilisateur</div>
                 <div class="panel-body">
                     X est un ChatBot possédant les interactions suivantes : <br>
                     <ul>
@@ -56,10 +57,15 @@
                         <li>
                             Gestion de contenu (permettant de lancer rapidement une musique, série, page web...)
                             <ul>
-                                <li>Ajouter un contenu: (ex: <b>Je souhaite ajouter une <i>serie</i>, please</b> => puis donner le nom, et le lien)</li>
-                                <li>Accéder à un contenu: (ex: <b>Balance moi un gros son comme <i>Pentatonix</i></b>)</li>
+                                <li>Ajouter un contenu: (ex: <b>Je souhaite ajouter une <i>serie</i>, please</b> => puis
+                                    donner le nom, et le lien)
+                                </li>
+                                <li>Accéder à un contenu: (ex: <b>Balance moi un gros son comme <i>Pentatonix</i></b>)
+                                </li>
                                 <li>Lister les contenus d'un type: (ex: <b>Liste moi mes <i>musiques</i></b>)</li>
-                                <li>Connaître notre contenu d'un type préféré: (ex: <b>Quelle est ma <i>musique</i> préférée ?</b>)</li>
+                                <li>Connaître notre contenu d'un type préféré: (ex: <b>Quelle est ma <i>musique</i>
+                                        préférée ?</b>)
+                                </li>
                             </ul>
                         </li>
                     </ul>
@@ -68,9 +74,11 @@
         </div>
     </div>
     <div class="hidden model">
-        <div class="row message-bubble message-model">
-            <p class="text-muted name"></p>
-            <span class="text-content"></span>
+        <div class="row message-bubble">
+            <div class="message-model">
+                <p class="text-muted name"></p>
+                <span class="text-content"></span>
+            </div>
         </div>
     </div>
 {% endblock %}

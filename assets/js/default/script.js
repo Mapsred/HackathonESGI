@@ -12,7 +12,7 @@ var Bot = {
     initParameters: function () {
         Bot.inputText = $('#inputText');
         Bot.sendButton = $('#send');
-        Bot.modelDiv = $(".model .message-model");
+        Bot.modelDiv = $(".model .message-bubble");
         Bot.messageContainer = $('#messageContainer');
         Bot.user = "Invité";
         Bot.add = 0;
@@ -40,6 +40,10 @@ var Bot = {
         clone.find('.name').html(name);
         clone.find('.text-content').html(message);
         clone.appendTo('#messageContainer');
+
+        var className = name === 'Djingo' ? 'bot' : 'user';
+        clone.find('.message-model').addClass(className);
+
         Bot.messageContainer.animate({
             scrollTop: Bot.messageContainer.prop("scrollHeight") - Bot.messageContainer.height()
         }, 200);
