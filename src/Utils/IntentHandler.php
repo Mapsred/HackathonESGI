@@ -405,6 +405,34 @@ class IntentHandler
         return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
 
     }
+
+    /**
+     * @param Intent $intent
+     * @return array|null|string
+     */
+    protected function removeRoutine(Intent $intent)
+    {
+        $parameters = $this->getParameters();
+        $intentParameters = $intent->getParameters();
+        if (null !== $message = $this->verifyParameters($intentParameters, $parameters, $intent->getName())) {
+            return $message;
+        }
+
+        if (null === $profile = $this->getProfile()) {
+            return BotMessage::ROUTINE_NOT_LOGGED_IN;
+        }
+
+        $identifier = $parameters[$intentParameters[0]];
+        if (null !== $routine = $this->routineManager->getRepository()->findOneByProfileAndName($profile, $identifier)) {
+            $this->routineManager->removeEntity($routine);
+
+            return sprintf(BotMessage::ROUTING_REMOVING, $identifier);
+        }
+
+        return sprintf(BotMessage::ROUTING_NOT_EXISTING, $identifier);
+
+    }
+
     /* Helper methods */
 
     /**
