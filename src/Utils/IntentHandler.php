@@ -5,6 +5,7 @@ namespace App\Utils;
 use App\Entity\Intent;
 use App\Entity\Link;
 use App\Entity\Profile;
+use App\Entity\ProfileLink;
 use App\Entity\Task;
 use App\Entity\Type;
 use App\Manager\ProfileManager;
@@ -285,9 +286,11 @@ class IntentHandler
 
         $identifier = $parameters[$intentParameters[0]];
         if (null !== $music = $this->manager->getRepository(Link::class)->findOneBy(['name' => $identifier])) {
-            $profile = $this->profileManager->getRepository()->findOneBy(['name' => 'Alexandre']);
-            $profile->addLink($music);
-            $this->manager->persist($profile);
+            $profile = $this->getProfile();
+            $newProfileLink = new ProfileLink;
+            $newProfileLink->setProfile($profile);
+            $newProfileLink->setLink($music);
+            $this->manager->persist($newProfileLink);
             $this->manager->flush();
             return [sprintf(BotMessage::LAUNCH_MUSIC, $identifier), 'Music' => $music->getUrl()];
         }
@@ -347,10 +350,10 @@ class IntentHandler
         }
 
         $identifier = $parameters[$intentParameters[0]];
-        if (null !== $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => 'Music'])) {
-            
-
-            /*return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'Prefered' => $identifier];*/
+        if (null === $prefered = $this->manager->getRepository(Type::class)->findOneBy(['name' => $identifier])) {
+                $profile = $this->profileManager->getRepository()->findOneBy(['name' => $this->getSessionIdentifier()]);
+                $listPrefered = $profile->getLinks();
+                return [sprintf(BotMessage::PREFERED_SHOW, $identifier), 'Prefered' => $listPrefered];
         }
 
         return BotMessage::PREFERED_UNAVAILABLE;

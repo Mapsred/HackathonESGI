@@ -40,11 +40,10 @@ class Link
      */
     private $type;
 
-    /**
-     * @var ArrayCollection|Profile[] $profiles
-     * @ORM\ManyToMany(targetEntity="App\Entity\Profile", mappedBy="links")
-     */
-    private $profiles;
+    /** 
+    * @ORM\OneToMany(targetEntity="ProfileLink", mappedBy="hobbit") 
+    */
+    private $profileLink;
 
     /**
      * Link constructor.

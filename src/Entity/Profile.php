@@ -33,14 +33,10 @@ class Profile
      */
     private $tasks;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Link", inversedBy="profiles")
-     * @ORM\JoinTable(name="profilelink",
-     *   joinColumns={@ORM\JoinColumn(name="profile_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@ORM\JoinColumn(name="link_id", referencedColumnName="id")}
-     * )
-     */
-    private $links;
+    /** 
+    * @ORM\OneToMany(targetEntity="ProfileLink", mappedBy="hobbit") 
+    */
+    private $profileLink;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Routine", mappedBy="profile")
@@ -118,32 +114,6 @@ class Profile
             if ($task->getProfile() === $this) {
                 $task->setProfile(null);
             }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Link[]
-     */
-    public function getLinks(): Collection
-    {
-        return $this->links;
-    }
-
-    public function addLink(Link $link): self
-    {
-        if (!$this->links->contains($link)) {
-            $this->links[] = $link;
-        }
-
-        return $this;
-    }
-
-    public function removeLink(Link $link): self
-    {
-        if ($this->links->contains($link)) {
-            $this->links->removeElement($link);
         }
 
         return $this;
