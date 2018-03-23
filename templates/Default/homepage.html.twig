@@ -2,6 +2,8 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('build/first_app.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.css" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -11,7 +13,7 @@
             <img src="{{ asset('assets/img/botdjingo.svg') }}">
         </div>
         <div class="bot_talk col s6 offset-s3">
-            <a target="_blank" href="{{ path('bot') }}">Besoin d'aide ?</a>
+            <a href="{{ path('bot') }}">Besoin d'aide ?</a>
         </div>
     </header>
 
@@ -58,4 +60,8 @@
             </a>
         </article>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.js"></script>
 {% endblock %}
