@@ -15,6 +15,7 @@ body p {
     color: black;
     margin: 0;
     position: fixed;
+    width: 370px;
 }
 
 .header_date, .header_menu {
@@ -76,19 +77,19 @@ body p {
     position: fixed;
     height: 30px;
     line-height: 30px;
-    width: 60%;
     border-radius: 30px;
     border: solid 0.4px;
     background-color: white;
     z-index: 1000;
 
-    margin: auto;
     left: 0;
     right: 0;
     bottom: 6vh;
     text-align: center;
     font-size: 1em;
     box-shadow: rgba(0, 0, 0, 0.4) 0px 0px 10px;
+    width: 370px;
+    margin: auto auto auto 40%;
 }
 
 /*////////////////////////Routine*/
