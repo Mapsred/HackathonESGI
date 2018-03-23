@@ -1,0 +1,61 @@
+{% extends "base.html.twig" %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/first_app.css') }}">
+{% endblock %}
+
+{% block body %}
+    <header class="row">
+        <div class="user col s4 offset-s4"><p> Username <br> <span>lv : 6 </span></p></div>
+        <div class="bot_pict col s4 offset-s4">
+            <img src="{{ asset('assets/img/botdjingo.svg') }}">
+        </div>
+        <div class="bot_talk col s6 offset-s3">
+            <a target="_blank" href="{{ path('bot') }}">Besoin d'aide ?</a>
+        </div>
+    </header>
+
+    <section class="row">
+        <article class="ligne1 col s4">
+            <a href="{{ path('routine') }}">
+                <img src="{{ asset('assets/img/routine.svg') }}">
+                <p> Routine </p>
+            </a>
+        </article>
+
+        <article class="ligne1 col s4">
+            <a href="{{ path('planning') }}">
+                <img src="{{ asset('assets/img/planing.svg') }}">
+                <p> Agenda </p>
+            </a>
+        </article>
+
+        <article class="ligne1 col s4">
+            <a href="{{ path('construction') }}">
+                <img src="{{ asset('assets/img/musique.svg') }}">
+                <p> Musique </p>
+            </a>
+        </article>
+
+        <article class="ligne2 col s4">
+            <a href="{{ path('construction') }}">
+                <img src="{{ asset('assets/img/contact.svg') }}">
+                <p> Contact </p>
+            </a>
+        </article>
+
+        <article class="ligne2 col s4">
+            <a href="{{ path('construction') }}">
+                <img src="{{ asset('assets/img/cinéma.svg') }}">
+                <p> Cinema </p>
+            </a>
+        </article>
+
+        <article class="ligne2 col s4">
+            <a href="{{ path('construction') }}">
+                <img src="{{ asset('assets/img/tv.svg') }}">
+                <p> Chaine TV </p>
+            </a>
+        </article>
+    </section>
+{% endblock %}

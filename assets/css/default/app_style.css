@@ -1,0 +1,89 @@
+html {
+    width: 370px;
+    margin-left: 40%;
+}
+
+a {
+    color: #FF6501 !important;
+}
+
+body {
+    background: linear-gradient(120deg, #BF4C01, #FF6501) no-repeat;
+}
+
+body p {
+    font-size: 2vh;
+    margin-top: 0;
+}
+
+header {
+    height: 44vh;
+    width: 100%;
+    /*background-image: linear-gradient(60deg, #BF4C01, #FF6501);*/
+}
+
+.user {
+    text-align: center;
+    /*//background-color: red;*/
+    height: 8vh;
+    margin-top: 2vh;
+}
+
+.user p {
+    margin-bottom: 0;
+    color: white;
+}
+
+.user p span {
+}
+
+.bot_pict {
+    margin-top: 5vh;
+    height: 15vh;
+    border-radius: 30px;
+    background-color: white;
+}
+
+.bot_pict img {
+    width: 100px;
+    height: 100px;
+}
+
+.bot_talk {
+    margin-top: 4vh;
+    height: 4vh;
+    line-height: 4vh;
+    text-align: center;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.row {
+    margin-bottom: 0;
+}
+
+section {
+    /*background-color: red;*/
+    height: 56vh;
+    overflow: hidden;
+    background: url(../../img/background.svg) no-repeat;
+    background-size: cover;
+}
+
+article {
+    /*background-color: grey;*/
+    text-align: center;
+    color: #FF6501;
+    height: 21vh;
+}
+
+.ligne1 {
+    margin-top: 12vh;
+}
+
+article img {
+    height: 11vh;
+    margin-bottom: 2vh;
+}
+
+/*//////////////////Planing/////////////////*/

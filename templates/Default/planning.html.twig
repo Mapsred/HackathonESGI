@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/second_app.css') }}">
+{% endblock %}
+
+{% block body %}
+    <nav class="planing_nav row">
+        <div class="header_date col s3 offset-s4"> Agenda</div>
+        <div class="header_menu col s2 offset-s3">
+            <a href="{{ path('homepage') }}"><img src="{{ asset('assets/img/menu.svg') }}"></a>
+        </div>
+    </nav>
+    <section class="planing_section row">
+        <div class="add_line"> Nouvelle tâche</div>
+        <ul class="collapsible popout" data-collapsible="accordion">
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Faire la vaiselle <br> <span>12H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Sortir le chien <br> <span>10H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Enregistrer Dr House <br> <span>20H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Lancer la playlist rock <br> <span>12H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Lancer la playlist dance <br> <span>12H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Lancer la playlist electro <br> <span>12H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <div class="round col l2"> <?php  ?> </div>
+                    <p class="onglet_title col l5 offset-s1"> Faire la vaiselle <br> <span>12H30 </span></p>
+                </div>
+                <div class="collapsible-body"><p> Lorem ipsum dolor sit amet.</p>
+                    <i class="col s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+        </ul>
+    </section>
+{% endblock %}

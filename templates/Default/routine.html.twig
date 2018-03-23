@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/second_app.css') }}">
+{% endblock %}
+
+{% block body %}
+    <nav class="planing_nav row">
+        <div class="header_date col s3 offset-s4"> Routine</div>
+        <div class="header_menu col s2 offset-s3">
+            <a href="{{ path('homepage') }}"><img src="{{ asset('assets/img/menu.svg') }}"></a>
+        </div>
+    </nav>
+    <section class="routine_section planing_section row">
+
+        <a href="{{ path('routine_create') }}">
+            <div class="add_routine"> Ajouter une routine</div>
+        </a>
+
+        <ul class="collapsible popout" data-collapsible="accordion">
+            <li>
+                <div class="onglet collapsible-header">
+                    <p class="onglet_title col l5 offset-s1"> Matinale <br> <span> </span></p>
+                </div>
+                <div class="collapsible-body"><span>Ma routine pour les matins cool.</span>
+                    <i class="col offset-s8 s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <p class="onglet_title col l5 offset-s1"> Soirée <br> <span> </span></p>
+                </div>
+                <div class="collapsible-body"><span>Ma routine pour les matins cool.</span>
+                    <i class="col offset-s8 s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <p class="onglet_title col l5 offset-s1"> Romantique <br> <span> </span></p>
+                </div>
+                <div class="collapsible-body"><span>Ma routine pour les matins cool.</span>
+                    <i class="col offset-s8 s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <p class="onglet_title col l5 offset-s1"> Cinéma <br> <span> </span></p>
+                </div>
+                <div class="collapsible-body"><span>Ma routine pour les matins cool.</span>
+                    <i class="col offset-s8 s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+
+            <li>
+                <div class="onglet collapsible-header">
+                    <p class="onglet_title col l5 offset-s1"> Lecteur de musique <br> <span> </span></p>
+                </div>
+                <div class="collapsible-body"><span>Ma routine pour les matins cool.</span>
+                    <i class="col offset-s8 s2 material-icons"> build </i>
+                    <i class="col s2 material-icons"> clear </i>
+                </div>
+            </li>
+        </ul>
+    </section>
+{% endblock %}
+

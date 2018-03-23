@@ -13,6 +13,14 @@ Encore
         './assets/css/app.scss'
     ])
 
+    .addEntry('first_app', [
+        './assets/css/first_app.scss'
+    ])
+
+    .addEntry('second_app', [
+        './assets/css/second_app.scss'
+    ])
+
     .autoProvidejQuery()
 
     .enableSourceMaps(!Encore.isProduction())

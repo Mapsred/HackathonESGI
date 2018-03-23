@@ -1,5 +1,16 @@
 $(document).ready(function () {
     Bot.init();
+    $('.collapsible').collapsible();
+
+    $(".create_select").click(function () {
+        if ($(this).hasClass('orange')) {
+            $(this).css("background-color", "grey");
+        } else {
+            $(".create_select").css("background-color", "grey");
+            $(this).css("background-color", "orange");
+        }
+    });
+
 });
 
 var Bot = {
@@ -74,7 +85,7 @@ var Bot = {
         } else if (typeof message['AddRoutine'] !== "undefined") {
             Bot.routine.isOnRoutine = 1;
             Bot.routine.routineName = message['AddRoutine'];
-        }else if (typeof message['LaunchRoutine'] !== "undefined") {
+        } else if (typeof message['LaunchRoutine'] !== "undefined") {
             $.each(message['LaunchRoutine'], function (key, message) {
                 Bot.query(message);
             });
@@ -88,7 +99,7 @@ var Bot = {
         $.ajax({
             url: Routing.generate('add'),
             type: "POST",
-            data: {'name': Bot.addName, 'url': Bot.addUrl, 'type' : Bot.addType},
+            data: {'name': Bot.addName, 'url': Bot.addUrl, 'type': Bot.addType},
             success: function (res) {
                 console.log(res);
                 var message = res['message'];

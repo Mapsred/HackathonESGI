@@ -23,7 +23,47 @@ class DefaultController extends Controller
      */
     public function homepage()
     {
+        return $this->render('Default/homepage.html.twig');
+    }
+
+    /**
+     * @Route("/bot", name="bot")
+     */
+    public function bot()
+    {
         return $this->render('Default/bot.html.twig');
+    }
+
+    /**
+     * @Route("/routine", name="routine")
+     */
+    public function routine()
+    {
+        return $this->render('Default/routine.html.twig');
+    }
+
+    /**
+     * @Route("/routine_create", name="routine_create")
+     */
+    public function routine_create()
+    {
+        return $this->render('Default/routine_create.html.twig');
+    }
+
+    /**
+     * @Route("/planning", name="planning")
+     */
+    public function planning()
+    {
+        return $this->render('Default/planning.html.twig');
+    }
+
+    /**
+     * @Route("/construction", name="construction")
+     */
+    public function construction()
+    {
+        return $this->render('Default/construction.html.twig');
     }
 
     /**
@@ -32,7 +72,7 @@ class DefaultController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function queryAction(Request $request)
+    public function query(Request $request)
     {
         $response = $this->get(LuisSDK::class)->query($request->request->get('q'));
 
@@ -56,7 +96,7 @@ class DefaultController extends Controller
      * @param Request $request
      * @return Response
      */
-    public function addAction(Request $request)
+    public function add(Request $request)
     {
         $name = $request->get('name');
         $url = $request->get('url');

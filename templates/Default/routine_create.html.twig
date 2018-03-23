@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('build/second_app.css') }}">
+{% endblock %}
+
+{% block body %}
+    <nav class="planing_nav row">
+        <a href="{{ path('routine') }}"><i class="header_back col s2 medium material-icons"> arrow_back </i></a>
+        <div class="header_date col s3 offset-s2"> Routine</div>
+        <div class="header_menu col s2 offset-s3">
+            <a href="{{ path('homepage') }}"><img src="{{ asset('assets/img/menu.svg') }}"></a>
+        </div>
+    </nav>
+    <section class="routine_section planing_section row">
+        <form class="col s12">
+            <div class="container_create row">
+                <div class="input-field col s12">
+                    <input id="name_Routine" type="text" placeholder="Mom de la routine" class="validate">
+                </div>
+                <div class="create_select col s3 offset-s2">Horaire</div>
+                <div class="create_select col s3 offset-s2">Mot clé</div>
+                <div class="action_routine col s12">
+                    <div class="add_routine"> Sauvegarder la routine</div>
+                    <ul data-collapsible="accordion">
+                        {% for i in 1..4 %}
+                            <li class="action_routine_container">
+                                <div class="onglet onglet_action">
+                                    <p class="onglet_title col s3"> Action <br> <span> </span></p>
+                                    <i class="col s2 offset-s7 material-icons"> close </i>
+                                </div>
+                            </li>
+                        {% endfor %}
+
+                        <li class="action_routine_container">
+                            <div class="onglet onglet_action">
+                                <input class="onglet_title col s10 validate" id="name_Routine" type="text"
+                                       placeholder="Ajouter une action">
+                                <i class="col s2 material-icons"> check </i>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </form>
+    </section>
+{% endblock %}
+
+
