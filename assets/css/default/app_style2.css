@@ -77,13 +77,13 @@ body p {
     position: fixed;
     height: 30px;
     line-height: 30px;
-    width: 60%;
     border-radius: 30px;
     border: solid 0.4px;
     background-color: white;
     z-index: 1000;
 
-    margin: auto;
+    width: 370px;
+    margin: auto auto auto 40%;
     left: 0;
     right: 0;
     bottom: 6vh;
